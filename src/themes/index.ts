@@ -6,12 +6,12 @@ export const THEME = extendTheme({
             "yellow-dark": "#C47F17", 
             "yellow": "#DBAC2C", 
             "purple-dark": "#4B2995", 
-            "purple": "#8047f8", 
+            "brand_purple": "#8047f8", 
             "purple-light": "#EBEFF9"
         },
         base:{
-            "gray-100": "#272221",
-            "gray-200": "#403937",
+            "gray100": "#272221",
+            "gray200": "#403937",
             "gray300": "#574F4D",
             "gray400": "#8D8686",
             "gray500": "#D7D5D5",
