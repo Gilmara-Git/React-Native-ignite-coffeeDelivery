@@ -1,14 +1,21 @@
-import { Spinner, Center } from "native-base";
+import { View, ActivityIndicator } from "react-native";
 
 type LoadingProps = {
   spinnerColor: string;
-  size: string;
+  size: number;
 };
 
 export const Loading = ({ spinnerColor, size }: LoadingProps) => {
   return (
-    <Center flex={1} backgroundColor="base.gray100">
-      <Spinner color={spinnerColor} size={size} />
-    </Center>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#272221",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <ActivityIndicator color={spinnerColor} size={size} />
+    </View>
   );
 };
