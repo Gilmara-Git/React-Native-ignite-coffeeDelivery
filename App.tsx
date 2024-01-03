@@ -13,6 +13,7 @@ import { Home } from "@screens/Home";
 
 export default function App() {
   const [closeSplash, setCloseSplash] = useState(false);
+  const [ isBackgroundDark, setIsBackgroundDark ] = useState(false);
 
   const [fontsLoaded] = useFonts({
     Baloo2_700Bold,
@@ -28,13 +29,13 @@ export default function App() {
     <SafeAreaProvider>
       <NativeBaseProvider theme={THEME}>
         <StatusBar
-          barStyle="dark-content"
+          barStyle={ isBackgroundDark ? 'light-content': 'dark-content'}
           backgroundColor="transparent"
           translucent
         />
 
         {closeSplash ? (
-          <Home />
+          <Home darkTopBackgroundColor={setIsBackgroundDark}/>
         ) : (
           <SplashAnimated unMountSplashScreen={setCloseSplash} />
         )}
