@@ -1,9 +1,7 @@
 import { Input as InputNativeBase, IInputProps, Icon } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
-type InputProps  = IInputProps & {
-    // textValue: string
-};
+type InputProps  = IInputProps;
 
 export const Input =( { ...rest}: InputProps)=>{
     return (
@@ -32,6 +30,7 @@ export const Input =( { ...rest}: InputProps)=>{
                     backgroundColor:'base.gray200'
                 }
             }
+
             {...rest}
         
 
