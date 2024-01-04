@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StatusBar } from "react-native";
 import { Baloo2_700Bold, useFonts } from "@expo-google-fonts/baloo-2";
-import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
+import { Roboto_400Regular, Roboto_700Bold, Roboto_900Black } from "@expo-google-fonts/roboto";
 
 import { NativeBaseProvider } from "native-base";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -19,6 +19,7 @@ export default function App() {
     Baloo2_700Bold,
     Roboto_700Bold,
     Roboto_400Regular,
+    Roboto_900Black
   });
 
   if (!fontsLoaded) {

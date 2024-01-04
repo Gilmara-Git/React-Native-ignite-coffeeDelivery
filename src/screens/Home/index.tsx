@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import { Text, VStack, HStack, View, Image } from "native-base";
+import { Text,  HStack, VStack, View, Image } from "native-base";
 import { Dimensions } from "react-native";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated, { SlideInUp, useAnimatedStyle , Easing} from "react-native-reanimated";
 
 import { Header } from "@components/Header";
 import { Input } from "@components/Input";
+import { CoffeeCategories } from "@components/CoffeeCategories";
 import coffeeBeans from "@assets/coffeeBeans.png";
 
 type HomeProps = {
   darkTopBackgroundColor: (nuance: boolean) => void;
 };
+
+const categories = [ 'traditional', 'sweet', 'special'];
 
 export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
   const screenHeight = Dimensions.get("window").height;
@@ -28,8 +31,8 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
 
   const AnimatedBottom = useAnimatedStyle(() => {
     return {
-      alignItems: "center",
-      justifyContent: "center",
+      // alignItems: "center",
+      // justifyContent: "center",
       height: screenHeight / 2,
       backgroundColor: "#FAFAFA",
     };
@@ -47,7 +50,10 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
         rightIcon="shopping-cart"
       />
 
-      <Animated.View style={AnimatedTop}>
+      <Animated.View 
+        style={AnimatedTop}
+        entering={SlideInUp.easing(Easing.ease).duration(250)}
+        >
         <HStack pt={12} px={8} alignItems="center" justifyContent="center">
           <View>
             <Text
@@ -79,7 +85,29 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
       </Animated.View>
 
       <Animated.View style={AnimatedBottom}>
-        <Text color="base.gray100">Bottom Content</Text>
+        <VStack px={8} pt={48}>
+
+          <Text 
+            color="base.gray300"
+            fontFamily='baloo2_bold'
+            fontSize='text_Md'
+            >
+              Our Coffees
+          </Text>
+
+          <HStack justifyContent='flex-start'>
+            { categories.map((category, index) =>
+              
+                <CoffeeCategories 
+                  key={index} 
+                  category={category}
+                  onPress={()=>console.log(`I was just pressed ${category}`)}
+                  />
+
+              )}
+          </HStack>
+
+        </VStack>
       </Animated.View>
     </VStack>
   );
