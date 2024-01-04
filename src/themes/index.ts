@@ -31,6 +31,7 @@ export const THEME = extendTheme({
     fonts:{
         baloo2_bold: "Baloo2_700Bold",
         roboto_bold:" Roboto_700Bold",
+        roboto_bolder: "Roboto_900Black",
         roboto_regular:"Roboto_400Regular"
     },
     fontSizes:{
