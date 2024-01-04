@@ -19,7 +19,7 @@ export const Input =( { ...rest}: InputProps)=>{
             fontSize='text_Sm'
             InputLeftElement={
                 <Icon as={<Ionicons name='search-outline'/>} 
-                 size={6} 
+                 size={5} 
                  color='base.gray400'
                  ml={4}
                  />}
