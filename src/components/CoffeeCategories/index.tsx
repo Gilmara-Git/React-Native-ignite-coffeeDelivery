@@ -11,13 +11,13 @@ export const CoffeeCategories = ({ category , ...rest}: CoffeeCategoriesProps)=>
             <Pressable
                 {...rest} >
                 <Text
-                    borderColor='product.brand_purple' 
+                    borderColor='product.dark_purple' 
                     borderRadius={12} 
                     borderWidth={1}
                     p={1} 
                     px={2}
                     mr={4}    
-                    color='product.brand_purple'
+                    color='product.dark_purple'
                     fontFamily='roboto_bolder'
                     fontSize='tag'
                     textAlign='center'
