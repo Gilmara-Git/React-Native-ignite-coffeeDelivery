@@ -18,7 +18,7 @@ export const SectionListItem = ({
     <HStack
       bg="base.gray800"
       mb={8}
-      p={4}
+      p={6}
       borderTopLeftRadius={10}
       borderBottomLeftRadius={48}
       borderTopRightRadius={48}
@@ -37,6 +37,7 @@ export const SectionListItem = ({
           fontSize="title_Sm"
           fontFamily="baloo2_bold"
           color="base.gray200"
+          mt={2}
         >
           {title}
         </Heading>
