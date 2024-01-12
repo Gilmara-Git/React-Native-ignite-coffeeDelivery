@@ -17,10 +17,12 @@ import * as SplashScreen from "expo-splash-screen";
 
 type SplashAnimatedProps = {
   unMountSplashScreen: (status: boolean) => void;
+  darkTopBackgroundColor: (nuance: boolean)=>void;
 };
 
 export const SplashAnimated = ({
   unMountSplashScreen,
+  darkTopBackgroundColor
 }: SplashAnimatedProps) => {
   const [runAnimation, setRunAnimation] = useState(false);
 
@@ -78,6 +80,9 @@ export const SplashAnimated = ({
     startAnimation();
   }, []);
 
+  useEffect(()=>{
+    darkTopBackgroundColor(true);
+  }, [])
   return (
     <View flex={1} backgroundColor="#4b2995">
       <Animated.View style={AnimatedCircle} />
