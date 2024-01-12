@@ -1,14 +1,310 @@
-import { View, Text } from "native-base";
+import { useEffect, useState } from "react";
+import { Text, HStack, View, Image, SectionList, Heading } from "native-base";
+import { Dimensions, SafeAreaView, SectionListProps } from "react-native";
+import Animated, {
+  FadeInDown,
+  FadeInUp,
+  useAnimatedStyle,
+  Easing,
+  useSharedValue,
+  interpolate,
+  Extrapolate,
+  withTiming,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
 
-export const Home = () => {
+import { ImageSourcePropType } from "react-native";
+
+import { Header } from "@components/Header";
+
+import { Input } from "@components/Input";
+import { SectionListItem } from "@components/SectionListItem";
+import { FlatListItem } from "@components/FlatListItem";
+
+import { CoffeeCategories } from "@components/CoffeeCategories";
+import coffeeBeans from "@assets/coffeeBeans.png";
+import { sectionList_DATA } from "@src/utils/coffeeData";
+import { flatList_DATA } from "@src/utils/coffeeData";
+
+const AnimatedSafeArea = Animated.createAnimatedComponent(SafeAreaView);
+const AnimatedSectionList =
+  Animated.createAnimatedComponent<SectionListProps<coffeeType, coffeeTypeSL>>(
+    SectionList
+  );
+
+type coffeeType = {
+  id: string;
+  label: string;
+  imgSrc: ImageSourcePropType;
+  title: string;
+  description: string;
+  price: string;
+};
+
+type coffeeTypeSL = {
+  category: string;
+  data: coffeeType[];
+};
+
+type coffeeTypeFL = {
+  label: string;
+  imgSrc: ImageSourcePropType;
+  title: string;
+  description: string;
+  price: string;
+};
+
+type HomeProps = {
+  darkTopBackgroundColor: (nuance: boolean) => void;
+};
+
+const categories = ["traditionals", "sweet", "special"];
+
+export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
+  const [textValue, setTextValue] = useState("");
+  const [coffeeSectionList, setCoffeeSectionList] =
+    useState<coffeeTypeSL[]>(sectionList_DATA);
+  const [coffeeFlatList, setCoffeeFlatList] =
+    useState<coffeeTypeFL[]>(flatList_DATA);
+
+  const scrollX = useSharedValue(0);
+  const scrollY = useSharedValue(0);
+  const moveHorizontal = useSharedValue(0);
+  let opacityLine = useSharedValue(0);
+
+  const AnimatedDivisorLine = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollY.value, [200, 450], [0, 1]),
+    };
+  });
+
+  const CARD_WIDTH = 208;
+  const gap = Dimensions.get("window").width / 2;
+
+  const handleTextValue = (text: string) => {
+    setTextValue(text);
+  };
+  const AnimatedFTList = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: interpolate(
+            moveHorizontal.value,
+            [0, 1],
+            [CARD_WIDTH + gap, 0],
+            Extrapolate.CLAMP
+          ),
+        },
+      ],
+    };
+  });
+
+  const handleFlatListScroll = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollX.value = event.contentOffset.x;
+    },
+  });
+
+  const handleSectionListScroll = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
+
+  useEffect(() => {
+    darkTopBackgroundColor(true);
+  }, []);
+
+  useEffect(() => {
+    moveHorizontal.value = withTiming(1, {
+      duration: 700,
+      easing: Easing.ease,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (scrollY.value > 400) {
+      opacityLine.value = 1;
+    }
+  }, [scrollY]);
   return (
-    <View
-      flex={1}
-      backgroundColor="base.gray100"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Text color="base.gray400">Find the perfect coffee during your day.</Text>
-    </View>
+    <>
+      <AnimatedSafeArea style={[{ backgroundColor: "#272221" }]} />
+      <SafeAreaView style={{ flex: 1, backgroundColor: "#272221" }}>
+        <View flex={1} pt={10} pb={12}>
+          <Header
+            scrollY={scrollY}
+            leftIcon="map-marker-alt"
+            title="Elizabeth, NJ"
+            rightIcon="shopping-cart"
+            opacityLine={opacityLine}
+          />
+
+          <Animated.View>
+            <AnimatedSectionList
+              // ref={}
+              bounces={false}
+              decelerationRate={0}
+              scrollEventThrottle={16}
+              contentContainerStyle={{ backgroundColor: "#FAFAFA" }}
+              onScroll={handleSectionListScroll}
+              sections={coffeeSectionList}
+              stickySectionHeadersEnabled={true}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(item) => String(item.id)}
+              ItemSeparatorComponent={() => <View style={{ padding: 10 }} />}
+              renderSectionHeader={({ section: { category } }) => (
+                <>
+                  <Animated.View
+                    style={[
+                      {
+                        height: 0.4,
+                        backgroundColor: "#D7D5D5",
+                        marginBottom: 20,
+                      },
+                      AnimatedDivisorLine,
+                    ]}
+                  />
+                  <Animated.View
+                    style={{ paddingHorizontal: 32 }}
+                    entering={FadeInDown.duration(700)}
+                  >
+                    <Text
+                      fontFamily="baloo2_bold"
+                      fontSize="title_Xs"
+                      color="base.gray400"
+                    >
+                      {category}
+                    </Text>
+                  </Animated.View>
+                </>
+              )}
+              ListHeaderComponent={() => (
+                <>
+                  <Animated.View
+                    entering={FadeInUp.duration(500)}
+                    style={{ backgroundColor: "#272221" }}
+                  >
+                    <View px={8}>
+                      <Text
+                        fontFamily="baloo2_bold"
+                        fontSize="title_Md"
+                        color="base.gray900"
+                        mt={4}
+                      >
+                        Find the perfect coffee any time of the day.
+                      </Text>
+
+                      <Input
+                        value={textValue}
+                        onChangeText={handleTextValue}
+                        zIndex={1}
+                        px={4}
+                      />
+                      <View pb={48} ml={2}>
+                        <Image
+                          position="absolute"
+                          right="-25"
+                          top="-1"
+                          source={coffeeBeans}
+                          alt="Coffee Beans"
+                          width="83"
+                          height="83"
+                          resizeMode="cover"
+                        />
+                      </View>
+                    </View>
+                  </Animated.View>
+
+                  <Animated.View
+                    style={[
+                      {
+                        zIndex: 2,
+                        marginTop: -200,
+                        alignItems: "center",
+                        marginLeft: 36,
+                      },
+                      AnimatedFTList,
+                    ]}
+                  >
+                    <Animated.FlatList
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                      data={coffeeFlatList}
+                      contentContainerStyle={{ paddingHorizontal: 12 }}
+                      renderItem={({ item, index }) => (
+                        <FlatListItem
+                          label={item.label}
+                          title={item.title}
+                          description={item.description}
+                          image={item.imgSrc}
+                          price={item.price}
+                          scrollX={scrollX}
+                          cardSize={CARD_WIDTH}
+                          index={index}
+                        />
+                      )}
+                      bounces={false}
+                      decelerationRate={0}
+                      scrollEventThrottle={16}
+                      onScroll={handleFlatListScroll}
+                      // snapToInterval={}
+                    />
+                  </Animated.View>
+
+                  <Animated.View
+                    entering={FadeInDown.duration(800)}
+                    style={[{ paddingHorizontal: 32, marginTop: -50 }]}
+                  >
+                    <Heading
+                      color="base.gray300"
+                      fontFamily="baloo2_bold"
+                      fontSize="title_Md"
+                      mb={2}
+                    >
+                      Our Coffees
+                    </Heading>
+
+                    <HStack mt={2} mb={5}>
+                      {categories.map((category, index) => (
+                        <CoffeeCategories
+                          key={index}
+                          category={category}
+                          onPress={() =>
+                            console.log(`I was just pressed ${category}`)
+                          }
+                        />
+                      ))}
+                    </HStack>
+                  </Animated.View>
+                </>
+              )}
+              SectionSeparatorComponent={() => (
+                <View
+                  style={{
+                    paddingHorizontal: 24,
+                    paddingVertical: 16,
+                    backgroundColor: "#FAFAFA",
+                  }}
+                />
+              )}
+              renderItem={({ item }) => (
+                <Animated.View
+                  style={{ paddingHorizontal: 24 }}
+                  entering={FadeInDown.duration(700).easing(Easing.bounce)}
+                >
+                  <SectionListItem
+                    image={item.imgSrc}
+                    title={item.title}
+                    description={item.description}
+                    price={item.price}
+                  />
+                </Animated.View>
+              )}
+            />
+          </Animated.View>
+        </View>
+      </SafeAreaView>
+    </>
   );
 };

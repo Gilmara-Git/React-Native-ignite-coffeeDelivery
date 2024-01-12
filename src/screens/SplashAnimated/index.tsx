@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import coffeeCup from "@src/assets/vector.png";
 import coffeeDelivery from "@src/assets/coffeeDelivery.png";
+
 import { View, Image, Center, HStack } from "native-base";
 import Animated, {
   FadeInRight,
@@ -16,10 +17,12 @@ import * as SplashScreen from "expo-splash-screen";
 
 type SplashAnimatedProps = {
   unMountSplashScreen: (status: boolean) => void;
+  darkTopBackgroundColor: (nuance: boolean)=>void;
 };
 
 export const SplashAnimated = ({
   unMountSplashScreen,
+  darkTopBackgroundColor
 }: SplashAnimatedProps) => {
   const [runAnimation, setRunAnimation] = useState(false);
 
@@ -77,40 +80,41 @@ export const SplashAnimated = ({
     startAnimation();
   }, []);
 
+  useEffect(()=>{
+    darkTopBackgroundColor(true);
+  }, [])
   return (
     <View flex={1} backgroundColor="#4b2995">
       <Animated.View style={AnimatedCircle} />
       <Center flex={1}>
         <HStack>
-          <View zIndex={1}>
+          <View zIndex={1} style={{ flexDirection: 'row'}}>
             <Animated.View>
               <Image
                 source={coffeeCup}
                 alt="Coffee Cup"
-                width="44"
-                height="68"
                 mr="2.5"
               />
             </Animated.View>
-          </View>
 
           {runAnimation && (
             <Animated.View
-              entering={FadeInRight.duration(900)
-                .easing(Easing.ease)
-                .withCallback(() => {
-                  "worklet";
-                  runOnJS(stopAnimation)();
-                })}
-            >
+            entering={FadeInRight.duration(900)
+              .easing(Easing.ease)
+              .withCallback(() => {
+                "worklet";
+                runOnJS(stopAnimation)();
+              })}
+              >
               <Image
                 source={coffeeDelivery}
                 alt="Coffee Cup"
                 width="95"
                 height="71"
-              />
+                />
             </Animated.View>
           )}
+          </View>
         </HStack>
       </Center>
     </View>

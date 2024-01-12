@@ -3,11 +3,11 @@ import { extendTheme } from "native-base";
 export const THEME = extendTheme({
     colors:{
         product:{
-            "yellow-dark": "#C47F17", 
+            "yellow_dark": "#C47F17", 
             "yellow": "#DBAC2C", 
-            "purple-dark": "#4B2995", 
+            "dark_purple": "#4B2995", 
             "brand_purple": "#8047F8", 
-            "purple-light": "#EBEFF9"
+            "purple_light": "#EBE5F9"
         },
         base:{
             "gray100": "#272221",
@@ -30,7 +30,8 @@ export const THEME = extendTheme({
     },
     fonts:{
         baloo2_bold: "Baloo2_700Bold",
-        roboto_bold:" Roboto_700Bold ",
+        roboto_bold:" Roboto_700Bold",
+        roboto_bolder: "Roboto_900Black",
         roboto_regular:"Roboto_400Regular"
     },
     fontSizes:{
@@ -46,8 +47,10 @@ export const THEME = extendTheme({
        tag: 10,
        button: 14
     },
-    customizedSizes:{
+        sizes :{
         // we already have plenty on native-base
+            14: 56,
+            44: 179
         
     }
 });

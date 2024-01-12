@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { StatusBar } from "react-native";
 import { Baloo2_700Bold, useFonts } from "@expo-google-fonts/baloo-2";
-import { Roboto_400Regular, Roboto_700Bold } from "@expo-google-fonts/roboto";
+import {
+  Roboto_400Regular,
+  Roboto_700Bold,
+  Roboto_900Black,
+} from "@expo-google-fonts/roboto";
 
 import { NativeBaseProvider } from "native-base";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -13,11 +17,13 @@ import { Home } from "@screens/Home";
 
 export default function App() {
   const [closeSplash, setCloseSplash] = useState(false);
+  const [isBackgroundDark, setIsBackgroundDark] = useState(false);
 
   const [fontsLoaded] = useFonts({
     Baloo2_700Bold,
     Roboto_700Bold,
     Roboto_400Regular,
+    Roboto_900Black,
   });
 
   if (!fontsLoaded) {
@@ -28,15 +34,18 @@ export default function App() {
     <SafeAreaProvider>
       <NativeBaseProvider theme={THEME}>
         <StatusBar
-          barStyle="dark-content"
+          barStyle={isBackgroundDark ? "light-content" : "dark-content"}
           backgroundColor="transparent"
           translucent
         />
 
         {closeSplash ? (
-          <Home />
+          <Home darkTopBackgroundColor={setIsBackgroundDark} />
         ) : (
-          <SplashAnimated unMountSplashScreen={setCloseSplash} />
+          <SplashAnimated
+            darkTopBackgroundColor={setIsBackgroundDark}
+            unMountSplashScreen={setCloseSplash}
+          />
         )}
       </NativeBaseProvider>
     </SafeAreaProvider>
