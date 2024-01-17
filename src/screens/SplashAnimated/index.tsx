@@ -15,7 +15,7 @@ import Animated, {
 } from "react-native-reanimated";
 import * as SplashScreen from "expo-splash-screen";
 
-type SplashAnimatedProps = {
+interface SplashAnimatedProps {
   unMountSplashScreen: (status: boolean) => void;
   darkTopBackgroundColor: (nuance: boolean)=>void;
 };
