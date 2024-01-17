@@ -7,7 +7,7 @@ export const THEME = extendTheme({
             "yellow": "#DBAC2C", 
             "dark_purple": "#4B2995", 
             "brand_purple": "#8047F8", 
-            "purple_light": "#EBE5F9"
+            "light_purple": "#EBE5F9"
         },
         base:{
             "gray100": "#272221",
