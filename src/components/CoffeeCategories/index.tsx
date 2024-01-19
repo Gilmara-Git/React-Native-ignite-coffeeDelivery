@@ -13,7 +13,6 @@ type CoffeeCategoriesProps = IPressableProps & {
 export const CoffeeCategories = ({
   category,
   active,
-
   ...rest
 }: CoffeeCategoriesProps) => {
 

@@ -35,7 +35,7 @@ export const THEME = extendTheme({
         roboto_regular:"Roboto_400Regular"
     },
     fontSizes:{
-       title_XI: 36,
+       title_Xl: 36,
        title_Lg: 24,
        title_Md: 20,
        title_Sm: 16,
@@ -49,6 +49,7 @@ export const THEME = extendTheme({
     },
         sizes :{
         // we already have plenty on native-base
+            11: 46,
             14: 56,
             44: 179
         

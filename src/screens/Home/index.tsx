@@ -59,7 +59,8 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
     useState<coffeeTypeSL[]>(sectionList_DATA);
   const [coffeeFlatList, setCoffeeFlatList] =
     useState<coffeeType[]>(flatList_DATA);
-  const [selectedCategory, setSelectedCategory] = useState("sweet");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
 
   const scrollX = useSharedValue(0);
   const scrollY = useSharedValue(0);

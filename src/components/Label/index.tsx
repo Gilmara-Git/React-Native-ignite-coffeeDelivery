@@ -1,10 +1,10 @@
 import { HStack, Text } from "native-base";
 
 type LabelProps = {
-  title: string;
+  label: string;
 };
 
-export const Label = ({ title }: LabelProps) => {
+export const Label = ({ label }: LabelProps) => {
   return (
     <HStack
       backgroundColor="product.purple_light"
@@ -20,7 +20,7 @@ export const Label = ({ title }: LabelProps) => {
         fontSize="tag"
         textAlign="center"
       >
-        {title.toUpperCase()}
+        {label.toUpperCase()}
       </Text>
     </HStack>
   );
