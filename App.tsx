@@ -14,6 +14,8 @@ import { THEME } from "@themes/index";
 import { SplashAnimated } from "@screens/SplashAnimated";
 import { Loading } from "@components/Loading";
 import { Home } from "@screens/Home";
+import { MapViewScreen } from "@screens/MapViewScreen";
+import { ProductScreen } from "@screens/ProductScreen";
 
 export default function App() {
   const [closeSplash, setCloseSplash] = useState(false);
@@ -40,7 +42,7 @@ export default function App() {
         />
 
         {closeSplash ? (
-          <Home darkTopBackgroundColor={setIsBackgroundDark} />
+          <ProductScreen darkTopBackgroundColor={setIsBackgroundDark} />
         ) : (
           <SplashAnimated
             darkTopBackgroundColor={setIsBackgroundDark}
