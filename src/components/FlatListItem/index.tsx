@@ -78,7 +78,7 @@ export const FlatListItem = ({
           top="-50"
         />
 
-        <Label title={label} />
+        <Label label={label} />
 
         <Heading
           fontFamily="baloo2_bold"

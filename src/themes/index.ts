@@ -7,7 +7,7 @@ export const THEME = extendTheme({
             "yellow": "#DBAC2C", 
             "dark_purple": "#4B2995", 
             "brand_purple": "#8047F8", 
-            "purple_light": "#EBE5F9"
+            "light_purple": "#EBE5F9"
         },
         base:{
             "gray100": "#272221",
@@ -22,9 +22,8 @@ export const THEME = extendTheme({
             "white":   "#FFFFFF",
         },
         feedback:{
-            "red-dark":"#C44117",
-            "red":     "#E8BAAB",
-            "red-light": "red-light"
+            "red_dark":"#C44117",
+            "red_light": "#E8BAAB"
 
         }
     },
@@ -35,7 +34,7 @@ export const THEME = extendTheme({
         roboto_regular:"Roboto_400Regular"
     },
     fontSizes:{
-       title_XI: 36,
+       title_Xl: 36,
        title_Lg: 24,
        title_Md: 20,
        title_Sm: 16,
@@ -49,8 +48,12 @@ export const THEME = extendTheme({
     },
         sizes :{
         // we already have plenty on native-base
+            11: 46,
             14: 56,
-            44: 179
+            28:100,
+            44: 179,
+            60: 247,
+            74:311
         
     }
 });

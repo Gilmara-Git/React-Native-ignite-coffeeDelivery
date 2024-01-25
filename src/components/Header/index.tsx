@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { HStack, IconButton, Icon } from "native-base";
 
 import { FontAwesome, Fontisto } from "@expo/vector-icons";
@@ -14,7 +13,8 @@ type HeaderProps = {
   title: string;
   rightIcon?: string;
   scrollY: SharedValue<number>;
-  opacityLine: SharedValue<number>;
+  // opacityLine?: SharedValue<number>;
+  size: string
 };
 
 export const Header = ({
@@ -22,9 +22,13 @@ export const Header = ({
   title,
   rightIcon,
   scrollY,
+  size
 }: HeaderProps) => {
+
   const AnimatedDivisorLine = useAnimatedStyle(() => {
     return {
+      
+      
       opacity: interpolate(scrollY.value, [280, 400], [0, 1]),
     };
   });
@@ -53,9 +57,9 @@ export const Header = ({
     <Animated.View style={AnimatedHeaderStyle}>
       <HStack p={4} alignItems="center" justifyContent="flex-start">
         <IconButton
-          icon={<Icon as={Fontisto} name={leftIcon} size="5" color="#8047F8" />}
+          icon={<Icon as={Fontisto} name={leftIcon} size={size} color="#8047F8" />}
           onPress={() => {
-            console.log("I was name pin");
+            console.log("My name pin");
           }}
         />
         <Animated.Text
@@ -82,7 +86,7 @@ export const Header = ({
               />
             }
             onPress={() => {
-              console.log("I was name shopping cart");
+              console.log("My name shopping cart");
             }}
           />
         </HStack>

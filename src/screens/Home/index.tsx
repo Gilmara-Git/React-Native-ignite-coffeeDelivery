@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Text, HStack, View, Image, SectionList, Heading } from "native-base";
 import { Dimensions, SafeAreaView, SectionListProps } from "react-native";
 import Animated, {
@@ -11,6 +11,7 @@ import Animated, {
   Extrapolate,
   withTiming,
   useAnimatedScrollHandler,
+  FadeIn,
 } from "react-native-reanimated";
 
 import { ImageSourcePropType } from "react-native";
@@ -46,17 +47,9 @@ type coffeeTypeSL = {
   data: coffeeType[];
 };
 
-type coffeeTypeFL = {
-  label: string;
-  imgSrc: ImageSourcePropType;
-  title: string;
-  description: string;
-  price: string;
-};
-
-type HomeProps = {
+interface HomeProps {
   darkTopBackgroundColor: (nuance: boolean) => void;
-};
+}
 
 const categories = ["traditionals", "sweet", "special"];
 
@@ -65,12 +58,15 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
   const [coffeeSectionList, setCoffeeSectionList] =
     useState<coffeeTypeSL[]>(sectionList_DATA);
   const [coffeeFlatList, setCoffeeFlatList] =
-    useState<coffeeTypeFL[]>(flatList_DATA);
+    useState<coffeeType[]>(flatList_DATA);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
 
   const scrollX = useSharedValue(0);
   const scrollY = useSharedValue(0);
   const moveHorizontal = useSharedValue(0);
-  let opacityLine = useSharedValue(0);
+  const sectionListRef = useRef(null);
+  // sectionListRef.current.scrollToLocation(scrollX, scrollY); is not working, nor the ref on the AnimatedSectionList
 
   const AnimatedDivisorLine = useAnimatedStyle(() => {
     return {
@@ -111,6 +107,19 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
     },
   });
 
+  const handleCategorySelectionAndSectionListScroll = (
+    category: string,
+    index: number
+  ) => {
+    setSelectedCategory(category);
+
+    //  handleSectionListScrolling(index)
+    // sectionListRef.current.scrollToLocation({
+    //   itemIndex: 0,
+    //   sectionIndex: index
+    // })
+  };
+
   useEffect(() => {
     darkTopBackgroundColor(true);
   }, []);
@@ -124,9 +133,9 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
 
   useEffect(() => {
     if (scrollY.value > 400) {
-      opacityLine.value = 1;
     }
   }, [scrollY]);
+
   return (
     <>
       <AnimatedSafeArea style={[{ backgroundColor: "#272221" }]} />
@@ -137,19 +146,20 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
             leftIcon="map-marker-alt"
             title="Elizabeth, NJ"
             rightIcon="shopping-cart"
-            opacityLine={opacityLine}
+            size="5"
           />
 
-          <Animated.View>
+          <Animated.View ref={sectionListRef}>
             <AnimatedSectionList
-              // ref={}
+              // ref={sectionListRef}
+              initialScrollIndex={0}
+              onScroll={handleSectionListScroll}
               bounces={false}
               decelerationRate={0}
               scrollEventThrottle={16}
               contentContainerStyle={{ backgroundColor: "#FAFAFA" }}
-              onScroll={handleSectionListScroll}
               sections={coffeeSectionList}
-              stickySectionHeadersEnabled={true}
+              stickySectionHeadersEnabled={false}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item) => String(item.id)}
               ItemSeparatorComponent={() => <View style={{ padding: 10 }} />}
@@ -183,7 +193,7 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
                 <>
                   <Animated.View
                     entering={FadeInUp.duration(500)}
-                    style={{ backgroundColor: "#272221" }}
+                    style={[{ backgroundColor: "#272221" }]}
                   >
                     <View px={8}>
                       <Text
@@ -248,12 +258,12 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
                       decelerationRate={0}
                       scrollEventThrottle={16}
                       onScroll={handleFlatListScroll}
-                      // snapToInterval={}
+                      snapToInterval={10}
                     />
                   </Animated.View>
 
                   <Animated.View
-                    entering={FadeInDown.duration(800)}
+                    entering={FadeIn.duration(800)}
                     style={[{ paddingHorizontal: 32, marginTop: -50 }]}
                   >
                     <Heading
@@ -271,8 +281,12 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
                           key={index}
                           category={category}
                           onPress={() =>
-                            console.log(`I was just pressed ${category}`)
+                            handleCategorySelectionAndSectionListScroll(
+                              category,
+                              index
+                            )
                           }
+                          active={selectedCategory === category}
                         />
                       ))}
                     </HStack>
@@ -290,7 +304,7 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
               )}
               renderItem={({ item }) => (
                 <Animated.View
-                  style={{ paddingHorizontal: 24 }}
+                  style={[{ paddingHorizontal: 24 }]}
                   entering={FadeInDown.duration(700).easing(Easing.bounce)}
                 >
                   <SectionListItem
