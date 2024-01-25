@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ScrollView } from "react-native";
+
 import {
   VStack,
   HStack,
@@ -8,13 +8,11 @@ import {
   Icon,
   Text,
   Box,
-  View,
+
 } from "native-base";
 import Animated, {
   FlipInXUp,
   Keyframe,
-  useAnimatedStyle,
-  useSharedValue,
 } from "react-native-reanimated";
 import { Fontisto, MaterialCommunityIcons } from "@expo/vector-icons";
 import Smoke from "@assets/smoke.png";
@@ -23,7 +21,7 @@ import { SizeButton } from "@components/SizeButton";
 
 import { AntDesign } from "@expo/vector-icons";
 
-import { LinearGradient } from "expo-linear-gradient";
+
 
 // title e label , description virão por parâmetros na rota
 interface ProductScreenProps {
@@ -38,7 +36,7 @@ export const ProductScreen = ({
 }: ProductScreenProps) => {
   console.log("traditional".length);
   const labelLength = "sweet".length;
-  const top = useSharedValue(-15);
+
 
   const AnimatedSmoke = new Keyframe({
     0: { opacity: 0, transform: [{ translateX: -5 }, { translateY: 0 }] },
@@ -155,7 +153,8 @@ export const ProductScreen = ({
                 .mass(1)
                 .stiffness(5)
                 .restDisplacementThreshold(0.1)
-                .restSpeedThreshold(2)}
+                .restSpeedThreshold(2)
+              }
               style={{
                 position: "absolute",
                 bottom: -47,
@@ -183,6 +182,7 @@ export const ProductScreen = ({
               color="base.gray300"
               pressedColor="base.gray600"
               height={10}
+              bg='base.gray700'
             />
             <SizeButton
               title="140oz"
@@ -190,6 +190,7 @@ export const ProductScreen = ({
               color="base.gray300"
               pressedColor="base.gray600"
               height={10}
+              bg='base.gray700'
             />
             <SizeButton
               title="227oz"
@@ -197,6 +198,7 @@ export const ProductScreen = ({
               color="base.gray300"
               pressedColor="base.gray600"
               height={10}
+              bg='base.gray700'
             />
           </HStack>
           <Box mt={5} p={2} bg="base.gray700" rounded="md">

@@ -1,6 +1,6 @@
 import { HStack, IconButton, Icon } from "native-base";
 
-import { FontAwesome, Fontisto , AntDesign} from "@expo/vector-icons";
+import { FontAwesome, Fontisto } from "@expo/vector-icons";
 import Animated, {
   SharedValue,
   useAnimatedStyle,

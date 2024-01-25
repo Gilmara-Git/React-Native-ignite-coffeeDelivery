@@ -17,11 +17,11 @@ export const SizeButton = ({title, variant='solid', active, color, pressedColor,
         height={height}
         width={24} 
         rounded='md'
-        bg='base.gray700'
         borderWidth={active? 1.5 : 0}
         borderColor={active ? 'product.brand_purple': ''}
         _pressed={{
-            bg: pressedColor
+            bg: pressedColor,
+          
         }}
         {...rest}
 
@@ -31,7 +31,7 @@ export const SizeButton = ({title, variant='solid', active, color, pressedColor,
                 fontSize='text_Sm' 
                 color={active ? 'product.brand_purple' : color }
                 >
-                {title}
+                {title.toUpperCase()}
 
             </Text>
        

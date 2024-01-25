@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StatusBar } from "react-native";
 import { Baloo2_700Bold, useFonts } from "@expo-google-fonts/baloo-2";
 import {
@@ -16,6 +16,10 @@ import { Loading } from "@components/Loading";
 import { Home } from "@screens/Home";
 import { MapViewScreen } from "@screens/MapViewScreen";
 import { ProductScreen } from "@screens/ProductScreen";
+import { OrderConfirm } from "@screens/OrderConfirm";
+import { CartScreen } from "@screens/CartScreen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 
 export default function App() {
   const [closeSplash, setCloseSplash] = useState(false);
@@ -32,24 +36,28 @@ export default function App() {
     return <Loading spinnerColor="#D7D5D5" size={30} />;
   }
 
-  return (
-    <SafeAreaProvider>
-      <NativeBaseProvider theme={THEME}>
-        <StatusBar
-          barStyle={isBackgroundDark ? "light-content" : "dark-content"}
-          backgroundColor="transparent"
-          translucent
-        />
 
-        {closeSplash ? (
-          <ProductScreen darkTopBackgroundColor={setIsBackgroundDark} />
-        ) : (
-          <SplashAnimated
-            darkTopBackgroundColor={setIsBackgroundDark}
-            unMountSplashScreen={setCloseSplash}
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+        <NativeBaseProvider theme={THEME}>
+      <SafeAreaProvider>
+          <StatusBar
+            barStyle={isBackgroundDark ? "light-content" : "dark-content"}
+            backgroundColor="transparent"
+            translucent
           />
-        )}
-      </NativeBaseProvider>
-    </SafeAreaProvider>
+
+          {closeSplash ? (
+            <CartScreen darkTopBackgroundColor={setIsBackgroundDark} />
+          ) : (
+            <SplashAnimated
+              darkTopBackgroundColor={setIsBackgroundDark}
+              unMountSplashScreen={setCloseSplash}
+            />
+          )}
+      </SafeAreaProvider>
+        </NativeBaseProvider>
+    </GestureHandlerRootView>
   );
 }
