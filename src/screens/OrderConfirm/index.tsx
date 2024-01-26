@@ -5,16 +5,21 @@ import Illustration from '@assets/illustration.png';
 import Animated, { LightSpeedInLeft , Easing} from 'react-native-reanimated';
 import { SizeButton } from '@components/SizeButton';
 
+
+import { useNavigation } from '@react-navigation/native';
+import {IRoutesNavigationParams } from '@routes/app.routes';
+
 const AnimatedSafeArea = Animated.createAnimatedComponent(SafeAreaView);
-interface OrderConfirmProps {
-    darkTopBackgroundColor: (nuance: boolean )=>void;
-}
 
-export const OrderConfirm = ({darkTopBackgroundColor}: OrderConfirmProps)=>{
-    useEffect(()=>{
-        darkTopBackgroundColor(false);
-    },[])
 
+export const OrderConfirm = ()=>{
+
+    const { navigate } = useNavigation<IRoutesNavigationParams>();
+
+    const returnHome =()=>{
+        navigate('home');
+    };
+    
     return (
         <AnimatedSafeArea style={{ backgroundColor: 'base.gray900', flex:1,  alignItems: 'center', justifyContent: 'center' }}>
             <VStack px={4} alignItems='center' justifyContent='center'>
@@ -47,6 +52,7 @@ export const OrderConfirm = ({darkTopBackgroundColor}: OrderConfirmProps)=>{
                 </View>
 
                 <SizeButton  
+                    onPress={returnHome}
                     title='Back home' 
                     color='base.white'   
                     height={11} 

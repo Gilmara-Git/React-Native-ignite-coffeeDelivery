@@ -6,12 +6,7 @@ import Animated , { useSharedValue, StretchInY, Easing, ZoomInEasyUp , ZoomInEas
 const AnimatedSafeArea = Animated.createAnimatedComponent(SafeAreaView);
 import MapView , { Marker }from 'react-native-maps';
 import * as Location from 'expo-location';
-import AmericanEspresso from '@src/assets/americanEspresso.png';
 
-
-interface MapViewProps {
-    darkTopBackgroundColor: (nuance: boolean)=>void;
-}
 
 type RegionProps = {
     latitude: number;
@@ -20,7 +15,7 @@ type RegionProps = {
     longitudeDelta: number;
 }
 
-export const MapViewScreen =({ darkTopBackgroundColor}: MapViewProps)=>{
+export const MapViewScreen =()=>{
     const [ region, setRegion ] = useState<RegionProps>({
         latitude: 40.752655,
         longitude: -73.977925,
@@ -33,9 +28,9 @@ const [ userLocation, setUserLocation ] = useState({})
 
     const scrollY = useSharedValue(0);
 
-    useEffect(() => {
-        darkTopBackgroundColor(true);
-      }, []);
+    // useEffect(() => {
+    //     darkTopBackgroundColor(true);
+    //   }, []);
 
      // the function on this useEffect is just to get the accurate user's device location
      // but I am not using it here, just wanted to test it
@@ -67,12 +62,6 @@ const [ userLocation, setUserLocation ] = useState({})
     return (
         <AnimatedSafeArea style={{ backgroundColor:'#272221', flex:1}}>
             <Animated.View style={{ paddingTop: 12}}>
-                <Header 
-                    title='Coffee Delivery, New York, NY' 
-                    leftIcon='arrow-left' 
-                    scrollY={scrollY} 
-                    size='4'
-                    />
 
             </Animated.View>
             <Animated.View 

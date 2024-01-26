@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-
+import { useState } from 'react';
 import {
   VStack,
   HStack,
@@ -21,20 +20,21 @@ import { SizeButton } from "@components/SizeButton";
 
 import { AntDesign } from "@expo/vector-icons";
 
+import { useNavigation } from '@react-navigation/native';
+import {IRoutesNavigationParams } from '@routes/app.routes';
+
 
 
 // title e label , description virão por parâmetros na rota
-interface ProductScreenProps {
-  darkTopBackgroundColor: (nuance: boolean) => void;
-  // title: string;
-  // label: string
-  // descripton: string
-}
+// interface ProductScreenProps {
+//   darkTopBackgroundColor: (nuance: boolean) => void;
+//   // title: string;
+//   // label: string
+//   // descripton: string
+// }
 
-export const ProductScreen = ({
-  darkTopBackgroundColor,
-}: ProductScreenProps) => {
-  console.log("traditional".length);
+export const ProductScreen =() => {
+
   const labelLength = "sweet".length;
 
 
@@ -45,15 +45,23 @@ export const ProductScreen = ({
     70: { opacity: 0.7, transform: [{ translateX: 5 }, { translateY: -10 }] },
     100: { opacity: 1, transform: [{ translateX: 0 }, { translateY: -12 }] },
   })
-    .delay(800)
-    .duration(2000);
+  .delay(800)
+  .duration(2000);
 
-  useEffect(() => {
-    darkTopBackgroundColor(true);
-  }, []);
+ 
+  const { goBack, navigate } = useNavigation<IRoutesNavigationParams>();
+
+  const handleReturnHome = () => {
+      goBack();
+  };
+
+  const goCart = () => {
+    navigate('cartScreen');
+  };
 
   return (
     // Decider se vai usar este Header ou a da React Navigation
+
 
     <Animated.ScrollView
       showsVerticalScrollIndicator={false}
@@ -71,7 +79,9 @@ export const ProductScreen = ({
           pt={8}
           alignItems="center"
         >
+          
           <IconButton
+            onPress={handleReturnHome}
             icon={
               <Icon as={Fontisto} name="arrow-left" size={3} color="#FFFFFF" />
             }
@@ -81,12 +91,13 @@ export const ProductScreen = ({
           />
 
           <IconButton
+            onPress={goCart}
             icon={
               <Icon
                 as={MaterialCommunityIcons}
-                name="cart-heart"
+                name="cart"
                 size={4}
-                color="#FFFFFF"
+                color="#8047F8"
               />
             }
             _pressed={{
@@ -267,5 +278,6 @@ export const ProductScreen = ({
         </VStack>
       </VStack>
     </Animated.ScrollView>
+
   );
 };

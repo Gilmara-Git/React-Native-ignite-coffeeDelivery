@@ -18,6 +18,7 @@ const handleRemove = ()=>{
               alt="Coffee mug image"
               height={16}
               width={16}
+              mr={2}
             />
           </HStack>
 

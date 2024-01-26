@@ -1,9 +1,9 @@
-import { Heading, Image, Text, VStack } from "native-base";
+import { Heading, Image, Text, VStack , Pressable, IPressableProps } from "native-base";
 import { ImageSourcePropType } from "react-native";
 import { Label } from "@components/Label";
-import Animated , { useAnimatedStyle , interpolate, SharedValue, Extrapolate, ZoomIn} from "react-native-reanimated";
+import Animated, { useAnimatedStyle , interpolate, SharedValue, Extrapolate, ZoomIn} from "react-native-reanimated";
 
-type FlatListItemProps = {
+type FlatListItemProps = IPressableProps &  {
   label: string;
   title: string;
   description: string;
@@ -22,7 +22,9 @@ export const FlatListItem = ({
   price,
   scrollX,
   cardSize,
-  index
+  index,
+  ...rest
+  
 
 }: FlatListItemProps) => {
 
@@ -55,7 +57,7 @@ export const FlatListItem = ({
     <Animated.View 
       entering={ZoomIn.delay(index * 100)}
       style={[animatedStyles]}>
-      <VStack
+      <Pressable
         bg="base.gray800"
         my={100}
         mx={4}
@@ -68,6 +70,7 @@ export const FlatListItem = ({
         borderBottomRightRadius={8}
         borderTopRightRadius={32}
         borderBottomLeftRadius={32}
+        {...rest}
       >
         <Image
           source={image}
@@ -108,7 +111,7 @@ export const FlatListItem = ({
           </Text>{" "}
           {price}
         </Text>
-      </VStack>
+      </Pressable>
     </Animated.View>
   );
 };

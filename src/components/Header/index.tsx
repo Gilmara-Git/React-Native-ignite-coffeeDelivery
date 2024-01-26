@@ -8,6 +8,9 @@ import Animated, {
   interpolate,
 } from "react-native-reanimated";
 
+import { useNavigation } from "@react-navigation/native";
+import { IRoutesNavigationParams } from '@routes/app.routes';
+
 type HeaderProps = {
   leftIcon?: string;
   title: string;
@@ -24,6 +27,17 @@ export const Header = ({
   scrollY,
   size
 }: HeaderProps) => {
+
+  const {navigate} = useNavigation<IRoutesNavigationParams>();
+
+  const handleGoMapView =()=>{
+    navigate('mapViewScreen')
+  };
+
+
+  const handleGoCart =()=>{
+    navigate('cartScreen')
+  };
 
   const AnimatedDivisorLine = useAnimatedStyle(() => {
     return {
@@ -57,9 +71,11 @@ export const Header = ({
     <Animated.View style={AnimatedHeaderStyle}>
       <HStack p={4} alignItems="center" justifyContent="flex-start">
         <IconButton
+       
           icon={<Icon as={Fontisto} name={leftIcon} size={size} color="#8047F8" />}
-          onPress={() => {
-            console.log("My name pin");
+          onPress={handleGoMapView}
+          _pressed={{
+            bg:'transparent'
           }}
         />
         <Animated.Text
@@ -84,9 +100,11 @@ export const Header = ({
                 size="5"
                 color="#C47F17"
               />
+              
             }
-            onPress={() => {
-              console.log("My name shopping cart");
+            onPress={handleGoCart}
+            _pressed={{
+              bg:'transparent'
             }}
           />
         </HStack>

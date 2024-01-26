@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Text, HStack, View, Image, SectionList, Heading } from "native-base";
-import { Dimensions, SafeAreaView, SectionListProps } from "react-native";
+import { Dimensions, SafeAreaView, SectionListProps , Platform } from "react-native";
 import Animated, {
   FadeInDown,
   FadeInUp,
@@ -26,6 +26,8 @@ import { CoffeeCategories } from "@components/CoffeeCategories";
 import coffeeBeans from "@assets/coffeeBeans.png";
 import { sectionList_DATA } from "@src/utils/coffeeData";
 import { flatList_DATA } from "@src/utils/coffeeData";
+import { useNavigation } from "@react-navigation/native";
+import { IRoutesNavigationParams } from '@routes/app.routes';
 
 const AnimatedSafeArea = Animated.createAnimatedComponent(SafeAreaView);
 const AnimatedSectionList =
@@ -34,7 +36,7 @@ const AnimatedSectionList =
   );
 
 type coffeeType = {
-  id: string;
+  id: number;
   label: string;
   imgSrc: ImageSourcePropType;
   title: string;
@@ -47,19 +49,24 @@ type coffeeTypeSL = {
   data: coffeeType[];
 };
 
-interface HomeProps {
-  darkTopBackgroundColor: (nuance: boolean) => void;
-}
+
 
 const categories = ["traditionals", "sweet", "special"];
 
-export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
+export const Home = () => {
   const [textValue, setTextValue] = useState("");
   const [coffeeSectionList, setCoffeeSectionList] =
     useState<coffeeTypeSL[]>(sectionList_DATA);
   const [coffeeFlatList, setCoffeeFlatList] =
     useState<coffeeType[]>(flatList_DATA);
   const [selectedCategory, setSelectedCategory] = useState("");
+
+
+  const { navigate} = useNavigation<IRoutesNavigationParams>();
+
+  const showProductDetails =( id: string)=>{
+    navigate('productScreen', { id: Number(id)} )
+  };
 
 
   const scrollX = useSharedValue(0);
@@ -120,10 +127,7 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
     // })
   };
 
-  useEffect(() => {
-    darkTopBackgroundColor(true);
-  }, []);
-
+ 
   useEffect(() => {
     moveHorizontal.value = withTiming(1, {
       duration: 700,
@@ -140,7 +144,11 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
     <>
       <AnimatedSafeArea style={[{ backgroundColor: "#272221" }]} />
       <SafeAreaView style={{ flex: 1, backgroundColor: "#272221" }}>
-        <View flex={1} pt={10} pb={12}>
+        <View 
+            flex={1} 
+            pb={12}
+            pt={Platform.OS === 'android'? 10: 6 } 
+            >
           <Header
             scrollY={scrollY}
             leftIcon="map-marker-alt"
@@ -252,6 +260,7 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
                           scrollX={scrollX}
                           cardSize={CARD_WIDTH}
                           index={index}
+                          onPress={()=>showProductDetails(String(item.id))}
                         />
                       )}
                       bounces={false}
@@ -308,6 +317,7 @@ export const Home = ({ darkTopBackgroundColor }: HomeProps) => {
                   entering={FadeInDown.duration(700).easing(Easing.bounce)}
                 >
                   <SectionListItem
+                    onPress={()=>showProductDetails(String(item.id))}
                     image={item.imgSrc}
                     title={item.title}
                     description={item.description}
