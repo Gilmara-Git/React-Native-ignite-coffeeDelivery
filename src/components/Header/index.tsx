@@ -1,6 +1,6 @@
 import { HStack, IconButton, Icon } from "native-base";
 
-import { FontAwesome, Fontisto } from "@expo/vector-icons";
+import { FontAwesome, Fontisto, MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -95,7 +95,7 @@ export const Header = ({
           <IconButton
             icon={
               <Icon
-                as={FontAwesome}
+                as={MaterialCommunityIcons}
                 name={rightIcon}
                 size="5"
                 color="#C47F17"

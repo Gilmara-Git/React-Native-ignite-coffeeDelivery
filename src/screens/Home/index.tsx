@@ -65,7 +65,7 @@ export const Home = () => {
   const { navigate} = useNavigation<IRoutesNavigationParams>();
 
   const showProductDetails =( id: string)=>{
-    navigate('productScreen', { id: Number(id)} )
+    navigate('productScreen', { coffeeId: Number(id)} )
   };
 
 
@@ -153,7 +153,7 @@ export const Home = () => {
             scrollY={scrollY}
             leftIcon="map-marker-alt"
             title="Elizabeth, NJ"
-            rightIcon="shopping-cart"
+            rightIcon="cart"
             size="5"
           />
 

@@ -4,13 +4,15 @@ import { ProductScreen } from '@screens/ProductScreen';
 import { CartScreen } from '@screens/CartScreen';
 import { MapViewScreen } from '@screens/MapViewScreen';
 import { OrderConfirm } from '@screens/OrderConfirm';
-
+import { Fontisto } from '@expo/vector-icons';
+import { Icon } from 'native-base';
+import { useNavigation } from '@react-navigation/native';
 
 type IRoutesType = {
     splashAnimated: undefined,
     home:undefined,
     productScreen:{
-        id: number,
+        coffeeId: number,
     },
     cartScreen: undefined,
     orderConfirm: undefined,
@@ -22,6 +24,8 @@ export type IRoutesNavigationParams = NativeStackNavigationProp<IRoutesType>
 export const AppRoutes =()=>{
     const { Navigator, Screen } =  createNativeStackNavigator<IRoutesType>();
 
+    const { goBack } = useNavigation<IRoutesNavigationParams>();
+   
 
     return (
         <Navigator screenOptions={{
@@ -52,8 +56,8 @@ export const AppRoutes =()=>{
                     title: 'Cart Screen',
                     headerTintColor: '#574F4D',
                     headerTitleStyle:{
-                        fontFamily: 'Baloo2_700Bold',
-                        fontSize: 16,  
+                    fontFamily: 'Baloo2_700Bold',
+                    fontSize: 16,  
                     },
                     headerTitleAlign: 'center',        
                     headerBackTitleStyle:{
@@ -65,6 +69,7 @@ export const AppRoutes =()=>{
                     }, 
                     // statusBarStyle: 'dark' ,
                     statusBarTranslucent: true ,
+                    headerLeft:(()=> <Icon as={Fontisto} name='arrow-left'size={3} onPress={goBack}/>)
                 }}/>
             <Screen name='orderConfirm' component={OrderConfirm}/>
             <Screen name='mapViewScreen' component={MapViewScreen} 

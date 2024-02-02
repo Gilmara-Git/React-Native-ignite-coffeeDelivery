@@ -22,24 +22,36 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useNavigation } from '@react-navigation/native';
 import {IRoutesNavigationParams } from '@routes/app.routes';
 
+import { useCart  } from '@contexts/useCart';
 
 
 export const CartScreen = () => {
   const scrollY = useSharedValue(0);
-  const [cart, setCart] = useState([{}]);
+
+
+  const { cart, clearCart, cartTotal, generateCartTotal} = useCart();
+
 
 
   const handleRemove = () => {
     console.log("I was swiped");
   };
 
+ 
 
   const { navigate} = useNavigation<IRoutesNavigationParams>();
 
   const directToOrder = ()=>{
+
+    // register the order details  and think of creating an order page
+    // clear cart
+    clearCart();
     navigate('orderConfirm')
   };
 
+  useEffect(()=>{
+    generateCartTotal()
+  }, [cart])
 //add StatusBar here because it is asking to manipulate an IOS file when trying to configure it through routes/app.routes.tsx
   return (
     <VStack bg="base.gray900" flex={1}>
@@ -89,7 +101,21 @@ export const CartScreen = () => {
             </HStack>
           )}
         >
-          <CartItem />
+
+          {cart.map((coffee, index) =>{
+           return  <CartItem 
+                      key={index}
+                      id={coffee.id}
+                      imgSrc={coffee.imgSrc} 
+                      title={coffee.title}
+                      price={coffee.price}
+                      size={coffee.coffeeDetails[0].size}
+                      quantity={coffee.coffeeDetails[0].quantity}
+              
+
+                      />
+
+          })}
 
       
          
@@ -136,7 +162,7 @@ export const CartScreen = () => {
             fontSize="title_Md"
             color="base.gray200"
           >
-            $9.90
+             $ {cartTotal.toFixed(2)}
           </Text>
         </HStack>
 

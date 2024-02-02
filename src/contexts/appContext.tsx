@@ -1,50 +1,86 @@
-import { createContext, ReactNode , useState } from 'react';
-import { IImageProps } from 'native-base';
+import { createContext, ReactNode, useState, useEffect } from "react";
+import { ImageSourcePropType } from "react-native";
 
 type AppContextProviderProps = {
-    children: ReactNode;
+  children: ReactNode;
 };
 
 type coffeeType = {
-    id: number;
-    title: string;
-    description: string;
-    price: string;
-    label: string;
-    imgSrc: IImageProps;
-
+  id: number;
+  label: string;
+  imgSrc: ImageSourcePropType;
+  title: string;
+  description: string;
+  price: string;
+  coffeeDetails: {
+    size: string;
+    quantity: number;
+  }[];
+  itemTotal: number;
 };
 
-type CartContextProps = {
-    cart: coffeeType[];
-    addCoffee: ()=> void;
-    removeCoffee: ()=> Promise<void>;
-    clearCart: ()=> void;
 
-}
+type CartContextProps = {
+  cart: coffeeType[];
+  addCoffee: (item: coffeeType) => void;
+  removeCoffee: (id: number) => void;
+  clearCart: () => void;
+  cartTotal: number;
+  generateCartTotal: () => void;
+};
 
 export const CartContext = createContext({} as CartContextProps);
 
-export const AppContextProvider = ({children}:AppContextProviderProps)=>{
-    
-    const [ cart, setCart ]  = useState<coffeeType[]>([]);
+export const AppContextProvider = ({ children }: AppContextProviderProps) => {
+  const [cart, setCart] = useState<coffeeType[]>([]);
+  const [cartTotal, setCartTotal] = useState(0);
 
-    const addCoffee = ()=>{};
-    const removeCoffee = async ()=>{};
-    const clearCart = ()=>{};
+  const addCoffee = (cartItem: coffeeType) => {
+    setCart((prevState) => [...prevState, cartItem]);
+  };
 
+  const removeCoffee = (id: number) => {
+    const currentCart = [...cart];
 
+    const updatedCart = currentCart.filter((coffee) => coffee.id !== id);
+    setCart(updatedCart);
+  };
 
-    return (
+  const clearCart = () => {
+    setCart([]);
+  };
 
-     <CartContext.Provider value={{
+  const generateCartTotal = () => {
+    const subTotalArray: number[] = [];
+    cart.forEach((cartItem) => {
+      subTotalArray.push(cartItem.itemTotal);
+      const total = subTotalArray.reduce(
+        (accumulator: number, current: number) => accumulator + current
+      );
+      setCartTotal(total);
+    });
+
+    if (cart.length === 0) {
+      setCartTotal(0);
+    }
+  };
+
+  useEffect(() => {
+    generateCartTotal();
+  }, []);
+
+  return (
+    <CartContext.Provider
+      value={{
         cart,
+        cartTotal,
         addCoffee,
         removeCoffee,
-        clearCart
-
-     }}>
-        {children}
-     </CartContext.Provider>
-    )
+        clearCart,
+        generateCartTotal,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };

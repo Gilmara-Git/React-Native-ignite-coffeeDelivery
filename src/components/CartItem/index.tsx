@@ -1,12 +1,75 @@
-import { HStack , VStack, Image , Text , View, Container, IconButton, Icon} from 'native-base';
-import Irish from '../../assets/irish.png';
-import  { AntDesign , MaterialCommunityIcons } from '@expo/vector-icons';
-// will receive id through params, so the item details can be pulled from the array
+import { useState, useEffect  } from 'react';
+import { HStack , VStack, Image , Text , View, IconButton, Icon} from 'native-base';
 
-export const CartItem = ()=>{
-const handleRemove = ()=>{
-  console.log('Trash was clicked')
-}
+import  { AntDesign , MaterialCommunityIcons } from '@expo/vector-icons';
+import { ImageSourcePropType } from 'react-native';
+
+import { useCart } from '@contexts/useCart';
+
+type CartItemProps = {
+  imgSrc: ImageSourcePropType,
+  title: string,
+  price: string,
+  size: string,
+  quantity: number;
+  id: number;
+ 
+};
+
+export const CartItem = ({ imgSrc, title, price, size , quantity , id }: CartItemProps)=>{
+  
+  const initialItemSubTotal = quantity * Number(price);
+
+  const [ updatedQty, setUpdatedQty] = useState<number>(quantity);
+  const [ itemTSubTotal, setItemSubTotal] = useState<number>(initialItemSubTotal);
+
+  const { cart , removeCoffee, generateCartTotal  } = useCart();
+  console.log(cart.length, 'linha27 not cartScreen')
+
+  const handleRemove = (id: number)=>{
+      removeCoffee(id);
+  };
+
+
+const updateItemInCart = (id:number, action: string)=>{
+
+  const currentInCart = [...cart];
+  let qty = 0;
+  let currentItemTotal = 0; 
+
+  const itemToUpdate = currentInCart.find(item => item.id === id);
+
+  if(action === 'plus'){
+  qty = ++itemToUpdate!.coffeeDetails[0].quantity;
+  itemToUpdate!.coffeeDetails[0].quantity  = qty; 
+  setUpdatedQty(qty);
+
+  currentItemTotal = Number(itemToUpdate?.price) * qty;
+  itemToUpdate!.itemTotal = currentItemTotal;
+  setItemSubTotal(currentItemTotal);
+  }
+
+  if(action === 'minus'){
+    if(itemToUpdate!.coffeeDetails[0].quantity > 1){
+      qty = --itemToUpdate!.coffeeDetails[0].quantity;
+      itemToUpdate!.coffeeDetails[0].quantity  = qty; 
+      setUpdatedQty(qty);
+
+      currentItemTotal = itemToUpdate!.itemTotal - Number(price)
+      itemToUpdate!.itemTotal = currentItemTotal;
+      setItemSubTotal(currentItemTotal);
+    
+
+    }else{
+      removeCoffee(id);
+    }
+
+  }
+};
+
+useEffect(()=>{
+  generateCartTotal();
+}, [updatedQty, itemTSubTotal, cart.length])
 
     return (
       <>
@@ -14,7 +77,7 @@ const handleRemove = ()=>{
         <HStack px={6} py={3} bg="base.gray900">
           <HStack>
             <Image
-              source={Irish}
+              source={imgSrc}
               alt="Coffee mug image"
               height={16}
               width={16}
@@ -29,14 +92,14 @@ const handleRemove = ()=>{
                 fontSize="text_Md"
                 color="base.gray100"
               >
-                Irish
+                {title}
               </Text>
               <Text
                 fontFamily="baloo2_bold"
                 fontSize="title_Sm"
                 color="base.gray100"
               >
-                $ 9.90
+                $ {itemTSubTotal.toFixed(2)}
               </Text>
             </HStack>
 
@@ -46,7 +109,7 @@ const handleRemove = ()=>{
                 fontSize="text_Sm"
                 color="base.gray400"
               >
-                227oz
+                {size}
               </Text>
             </View>
 
@@ -75,7 +138,7 @@ const handleRemove = ()=>{
                         name='minus'
                         color='product.brand_purple'
                         size={5}
-                        
+                        onPress={()=>updateItemInCart(id, 'minus')}
                         />
                     
                     }/>
@@ -85,7 +148,7 @@ const handleRemove = ()=>{
                     fontSize='text_Md'
                     color='base.gray100'
                     >
-                        1
+                        {updatedQty}
                 </Text>
 
                 <IconButton  
@@ -100,13 +163,14 @@ const handleRemove = ()=>{
                         name='plus'
                         color='product.brand_purple'
                         size={5}
+                        onPress={() => updateItemInCart(id, 'plus')}
                         
                         />
                     
                     }/>
               </HStack>
               <IconButton 
-              onPress={handleRemove}
+              onPress={()=>handleRemove(id)}
               _pressed={
                 {
                     backgroundColor: 'base.gray700',

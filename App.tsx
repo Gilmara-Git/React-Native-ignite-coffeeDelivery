@@ -21,6 +21,7 @@ import { OrderConfirm } from "@screens/OrderConfirm";
 import { CartScreen } from "@screens/CartScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Routes } from "@routes/index";
+import { AppContextProvider } from '@contexts/appContext';
 
 export default function App() {
   const [closeSplash, setCloseSplash] = useState(false);
@@ -52,7 +53,11 @@ export default function App() {
                 />
 
                 {closeSplash ? (
-                  <Routes />
+
+                  <AppContextProvider>
+                    <Routes />
+                  </AppContextProvider>
+
                 ) : (
                   <SplashAnimated
                     darkTopBackgroundColor={setIsBackgroundDark}

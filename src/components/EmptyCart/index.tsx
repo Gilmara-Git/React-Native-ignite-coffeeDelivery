@@ -1,8 +1,12 @@
 import { VStack, IconButton, Icon, Text } from "native-base";
 import { SizeButton } from "../SizeButton";
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
+import { IRoutesNavigationParams } from "@src/routes/app.routes";
 
 export const EmptyCart = () => {
+  const { navigate } = useNavigation<IRoutesNavigationParams>();
+
   return (
     <VStack 
         borderTopWidth={0.3} 
@@ -32,6 +36,7 @@ export const EmptyCart = () => {
         color='base.white' 
         bg='product.dark_purple' 
         pressedColor='product.brand_purple' 
+        onPress={()=>navigate('home')}
         />
     </VStack>
   );

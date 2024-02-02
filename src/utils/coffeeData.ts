@@ -35,8 +35,8 @@ export const sectionList_DATA = [
 {
     category: "Special",
     data: [
-        {id: 9, label: 'Special', imgSrc: cubano, title: "Cubano", description:'Cold Expresso coffee with a shot of rum, cream milk and mint', price: '11.50'},
-        {id: 10, label: 'Special', imgSrc: hawaiian, title: "Hawaiian", description:'Coffee mixed with coconut milk', price: '9,20'},
+        {id: 9, label: 'Special', imgSrc: cubano, title: "Cuban", description:'Cold Expresso coffee with a shot of rum, cream milk and mint', price: '11.50'},
+        {id: 10, label: 'Special', imgSrc: hawaiian, title: "Hawaiian", description:'Coffee mixed with coconut milk', price: '9.20'},
         {id: 11, label: 'Special', imgSrc: arabic, title: "Arabic", description:'Arabic coffee drink and spices', price: '8.85'},
         {id: 12, label: 'Special', imgSrc: irish, title: "Irish", description:'Coffee with a shot of Irish whiskey, sugar and whipped cream', price: '9.29'},
        
@@ -58,8 +58,8 @@ export const flatList_DATA = [
         {id: 6, label: 'Sweet', imgSrc: cappuccino, title: "Cappuccino", description:'Made with coffee, milk, foam and cinnamon', price: '10.70'},
         {id: 7, label: 'Sweet', imgSrc: mocaccino, title: "Mocaccino", description:'Expresso coffee with chocalate shot, milk and foam', price: '10.00'},
         {id: 8, label: 'Sweet', imgSrc: hotChocolate, title: "Hot Chocolate", description:'Diluted chocolate diluted in hot milk and coffee', price: '9.10'},
-        {id: 9, label: 'Special', imgSrc: cubano, title: "Cubano", description:'Cold Expresso coffee with a shot of rum, cream milk and mint', price: '11.50'},
-        {id: 10, label: 'Special', imgSrc: hawaiian, title: "Hawaiian", description:'Coffee mixed with coconut milk', price: '9,20'},
+        {id: 9, label: 'Special', imgSrc: cubano, title: "Cuban", description:'Cold Expresso coffee with a shot of rum, cream milk and mint', price: '11.50'},
+        {id: 10, label: 'Special', imgSrc: hawaiian, title: "Hawaiian", description:'Coffee mixed with coconut milk', price: '9.20'},
         {id: 11, label: 'Special', imgSrc: arabic, title: "Arabic", description:'Arabic coffee drink and spices', price: '8.85'},
         {id: 12, label: 'Special', imgSrc: irish, title: "Irish", description:'Coffee with a shot of Irish whiskey, sugar and whipped cream', price: '9.29'},   
 

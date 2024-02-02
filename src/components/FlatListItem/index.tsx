@@ -28,7 +28,6 @@ export const FlatListItem = ({
 
 }: FlatListItemProps) => {
 
- 
 // defining the scroll positions []
   const scrollXPositions = [
     (index - 1) * cardSize,
