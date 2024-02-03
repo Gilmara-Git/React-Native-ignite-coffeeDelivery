@@ -1,132 +1,151 @@
-import { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { useEffect, useRef } from "react";
+import { StatusBar , Alert } from "react-native";
 import {
   VStack,
   HStack,
   IconButton,
   Icon,
-  Heading,
-  View,
   Text,
-  ScrollView
+  ScrollView,
 } from "native-base";
 
-import Animated, { useSharedValue } from "react-native-reanimated";
-import { Fontisto, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useSharedValue } from "react-native-reanimated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CartItem } from "@components/CartItem";
 import { SizeButton } from "@src/components/SizeButton";
 import { EmptyCart } from "@components/EmptyCart";
 
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
-import { useNavigation } from '@react-navigation/native';
-import {IRoutesNavigationParams } from '@routes/app.routes';
+import { useNavigation } from "@react-navigation/native";
+import { IRoutesNavigationParams } from "@routes/app.routes";
 
-import { useCart  } from '@contexts/useCart';
-
+import { useCart } from "@contexts/useCart";
 
 export const CartScreen = () => {
   const scrollY = useSharedValue(0);
 
+  const { cart, cartTotal, generateCartTotal, removeCoffee } = useCart();
+  const orderNumberControl : string[] = [];
 
-  const { cart, clearCart, cartTotal, generateCartTotal} = useCart();
+  const swipeableRefs =  useRef<Swipeable[]>([]);
 
 
+  const handleRemove = (cartItemId: string, index: number ) => {
+    
+    swipeableRefs.current?.[index].close();
 
-  const handleRemove = () => {
-    console.log("I was swiped");
+    Alert.alert('Delete Item? ','Please confirm your cancel!',[
+      {
+        text: 'Confirm', onPress:()=> removeCoffee(cartItemId)
+      },
+      { text: 'Cancel', style: 'cancel'}
+    ])
+    
+
+
   };
 
- 
+  const { navigate } = useNavigation<IRoutesNavigationParams>();
 
-  const { navigate} = useNavigation<IRoutesNavigationParams>();
+  const directToOrder = () => {
+   
+    orderNumberControl.push('CF');
 
-  const directToOrder = ()=>{
-
-    // register the order details  and think of creating an order page
-    // clear cart
-    clearCart();
-    navigate('orderConfirm')
+    navigate("orderConfirm", { 
+      orderTotal: cartTotal, 
+      orderNumber: 'CoffeeOrder- ' + String(orderNumberControl.length - 1) +  String(orderNumberControl.length ) });
   };
 
-  useEffect(()=>{
-    generateCartTotal()
-  }, [cart])
-//add StatusBar here because it is asking to manipulate an IOS file when trying to configure it through routes/app.routes.tsx
+  useEffect(() => {
+    generateCartTotal();
+  }, [cart]);
+  //add StatusBar here because it is asking to manipulate an IOS file when trying to configure it through routes/app.routes.tsx
   return (
     <VStack bg="base.gray900" flex={1}>
-    
-      <StatusBar 
-        barStyle='dark-content'
-        backgroundColor='transparent' 
-        translucent/>
-     
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
       {!cart.length ? (
         <EmptyCart />
       ) : (
-
-        
-        
-        <ScrollView 
-          contentContainerStyle={{  height: "130%", }}
+        <ScrollView
+          contentContainerStyle={{ height: "130%" }}
           showsVerticalScrollIndicator={false}
-          >
-        <Swipeable
-          // ref={}
-          containerStyle={{ borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}
-          onSwipeableOpen={handleRemove}
-          overshootLeft={false}
-          renderLeftActions={() => (
-            <HStack
-              bg="feedback.red_light"
-              width="35%"
-              alignItems="center"
-              justifyContent="flex-start"
-              px={6}
-            >
-              <IconButton
-                onPress={handleRemove}
-                _pressed={{
-                  backgroundColor: "product.light_purple",
-                }}
-                icon={
-                  <Icon
-                    as={MaterialCommunityIcons}
-                    name="trash-can-outline"
-                    color="feedback.red_dark"
-                    size={7}
-                  />
-                }
-              />
-            </HStack>
-          )}
         >
+          { cart.map((coffee, index)=>{
+            return (
+          <Swipeable
+            key={coffee.cartItemId}
+            ref={(ref)=>{
+              if(ref){
+                swipeableRefs.current.push(ref)
+              }
+            }}
+            containerStyle={{
+              borderTopLeftRadius: 8,
+              borderBottomLeftRadius: 8,
+            }}
+            onSwipeableOpen={()=>handleRemove( coffee.cartItemId, index)}
+            overshootLeft={false}
+            renderRightActions={()=>null}
+            leftThreshold={10}
+            renderLeftActions={() => (
+              <HStack
+                bg="feedback.red_light"
+                width="35%"
+                alignItems="center"
+                justifyContent="flex-start"
+                px={6}
+              >
+                <IconButton
+                  onPress={()=>handleRemove( coffee.cartItemId, index)}
+                  _pressed={{
+                    backgroundColor: "product.light_purple",
+                  }}
+                  icon={
+                    <Icon
+                      as={MaterialCommunityIcons}
+                      name="trash-can-outline"
+                      color="feedback.red_dark"
+                      size={7}
+                    />
+                  }
+                />
+              </HStack>
+            )}
+            >
+               <CartItem
+                  key={coffee.cartItemId}
+                  id={coffee.id}
+                  imgSrc={coffee.imgSrc}
+                  title={coffee.title}
+                  price={coffee.price}
+                  size={coffee.coffeeDetails[0].size}
+                  quantity={coffee.coffeeDetails[0].quantity}
+                  cartItemId={coffee.cartItemId}
+                />
+            {/* {cart.map((coffee, index) => {
+              return (
+                <CartItem
+                  key={index}
+                  id={coffee.id}
+                  imgSrc={coffee.imgSrc}
+                  title={coffee.title}
+                  price={coffee.price}
+                  size={coffee.coffeeDetails[0].size}
+                  quantity={coffee.coffeeDetails[0].quantity}
+                />
+              );
+            })} */}
+          </Swipeable>
 
-          {cart.map((coffee, index) =>{
-           return  <CartItem 
-                      key={index}
-                      id={coffee.id}
-                      imgSrc={coffee.imgSrc} 
-                      title={coffee.title}
-                      price={coffee.price}
-                      size={coffee.coffeeDetails[0].size}
-                      quantity={coffee.coffeeDetails[0].quantity}
-              
 
-                      />
-
+            )
           })}
-
-      
-         
-          
-
-        </Swipeable>
-
-
-
-
-        
         </ScrollView>
       )}
 
@@ -137,7 +156,6 @@ export const CartScreen = () => {
           shadowRadius: 5,
           shadowOpacity: 0.6,
           elevation: 10,
-        
         }}
         position="absolute"
         bottom={0}
@@ -147,10 +165,8 @@ export const CartScreen = () => {
         bg="base.white"
         width="100%"
       >
-         
-        <HStack justifyContent="space-between" alignContent="center" mb={4} >
+        <HStack justifyContent="space-between" alignContent="center" mb={4}>
           <Text
-         
             fontFamily="roboto_regular"
             fontSize="text_Md"
             color="base.gray200"
@@ -162,19 +178,20 @@ export const CartScreen = () => {
             fontSize="title_Md"
             color="base.gray200"
           >
-             $ {cartTotal.toFixed(2)}
+            $ {cartTotal.toFixed(2)}
           </Text>
         </HStack>
 
         <HStack shadow={1}>
           <SizeButton
-          onPress={directToOrder}
+            onPress={directToOrder}
             height={11}
             width={74}
             bg="product.yellow_dark"
             title="Confirm order"
             color="base.white"
             pressedColor="product.yellow"
+            isDisabled={cart.length===0}
           />
         </HStack>
       </VStack>
