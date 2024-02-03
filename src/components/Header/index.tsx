@@ -81,7 +81,7 @@ export const Header = ({
         <Animated.Text
           style={[
             {
-              fontFamily: "Roboto_400Regular",
+              fontFamily: 'Baloo2_700Bold',
               fontSize: 16,
               flex: 1,
               marginLeft: -1,
