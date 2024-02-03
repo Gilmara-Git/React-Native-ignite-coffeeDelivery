@@ -15,7 +15,7 @@ type IRoutesType = {
         coffeeId: number,
     },
     cartScreen: undefined,
-    orderConfirm: undefined,
+    orderConfirm: { orderTotal: number, orderNumber: string},
     mapViewScreen: undefined,
 }
 

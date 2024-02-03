@@ -17,13 +17,14 @@ type coffeeType = {
     quantity: number;
   }[];
   itemTotal: number;
+  cartItemId: string
 };
 
 
 type CartContextProps = {
   cart: coffeeType[];
   addCoffee: (item: coffeeType) => void;
-  removeCoffee: (id: number) => void;
+  removeCoffee: (cartItemId: string) => void;
   clearCart: () => void;
   cartTotal: number;
   generateCartTotal: () => void;
@@ -35,14 +36,15 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const [cart, setCart] = useState<coffeeType[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
 
+
   const addCoffee = (cartItem: coffeeType) => {
     setCart((prevState) => [...prevState, cartItem]);
   };
 
-  const removeCoffee = (id: number) => {
+  const removeCoffee = (cartItemId: string) => {
     const currentCart = [...cart];
 
-    const updatedCart = currentCart.filter((coffee) => coffee.id !== id);
+    const updatedCart = currentCart.filter((coffee) => coffee.cartItemId !== cartItemId);
     setCart(updatedCart);
   };
 
