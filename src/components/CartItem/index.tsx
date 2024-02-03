@@ -2,7 +2,7 @@ import { useState, useEffect  } from 'react';
 import { HStack , VStack, Image , Text , View, IconButton, Icon} from 'native-base';
 
 import  { AntDesign , MaterialCommunityIcons } from '@expo/vector-icons';
-import { ImageSourcePropType } from 'react-native';
+import { ImageSourcePropType , Alert} from 'react-native';
 
 import { useCart } from '@contexts/useCart';
 
@@ -13,10 +13,11 @@ type CartItemProps = {
   size: string,
   quantity: number;
   id: number;
+  cartItemId: string;
  
 };
 
-export const CartItem = ({ imgSrc, title, price, size , quantity , id }: CartItemProps)=>{
+export const CartItem = ({ imgSrc, title, price, size , quantity , id, cartItemId }: CartItemProps)=>{
   
   const initialItemSubTotal = quantity * Number(price);
 
@@ -24,10 +25,18 @@ export const CartItem = ({ imgSrc, title, price, size , quantity , id }: CartIte
   const [ itemTSubTotal, setItemSubTotal] = useState<number>(initialItemSubTotal);
 
   const { cart , removeCoffee, generateCartTotal  } = useCart();
-  console.log(cart.length, 'linha27 not cartScreen')
 
-  const handleRemove = (id: number)=>{
-      removeCoffee(id);
+
+  const handleRemove = (cartItemId: string)=>{
+    
+    Alert.alert('Delete Item? ','Please confirm your cancel!',[
+      {
+        text: 'Confirm', onPress:()=> removeCoffee(cartItemId)
+      },
+      { text: 'Cancel', style: 'cancel'}
+    ])
+    
+    
   };
 
 
@@ -61,7 +70,7 @@ const updateItemInCart = (id:number, action: string)=>{
     
 
     }else{
-      removeCoffee(id);
+      removeCoffee(cartItemId);
     }
 
   }
@@ -170,7 +179,7 @@ useEffect(()=>{
                     }/>
               </HStack>
               <IconButton 
-              onPress={()=>handleRemove(id)}
+              onPress={()=>handleRemove(cartItemId)}
               _pressed={
                 {
                     backgroundColor: 'base.gray700',
