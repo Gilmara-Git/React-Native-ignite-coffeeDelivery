@@ -23,6 +23,7 @@ export const SizeButton = ({title, variant='solid', active, color, pressedColor,
             bg: pressedColor,
           
         }}
+       
         {...rest}
 
         >

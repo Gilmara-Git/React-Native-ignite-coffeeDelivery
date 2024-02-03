@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { StatusBar } from "react-native";
+import { useState  } from "react";
+import { StatusBar , StatusBarProps} from "react-native";
 import { Baloo2_700Bold, useFonts } from "@expo-google-fonts/baloo-2";
 import {
   Roboto_400Regular,
@@ -10,20 +10,19 @@ import {
 import { NativeBaseProvider } from "native-base";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { THEME } from "@themes/index";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { SplashAnimated } from "@screens/SplashAnimated";
 import { Loading } from "@components/Loading";
-import { Home } from "@screens/Home";
-import { MapViewScreen } from "@screens/MapViewScreen";
-import { ProductScreen } from "@screens/ProductScreen";
-import { OrderConfirm } from "@screens/OrderConfirm";
-import { CartScreen } from "@screens/CartScreen";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Routes } from "@routes/index";
+import { AppContextProvider } from '@contexts/appContext';
 
 export default function App() {
   const [closeSplash, setCloseSplash] = useState(false);
   const [isBackgroundDark, setIsBackgroundDark] = useState(false);
+ 
 
   const [fontsLoaded] = useFonts({
     Baloo2_700Bold,
@@ -36,28 +35,32 @@ export default function App() {
     return <Loading spinnerColor="#D7D5D5" size={30} />;
   }
 
-
-
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-        <NativeBaseProvider theme={THEME}>
-      <SafeAreaProvider>
-          <StatusBar
-            barStyle={isBackgroundDark ? "light-content" : "dark-content"}
-            backgroundColor="transparent"
-            translucent
-          />
+      <NavigationContainer>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <NativeBaseProvider theme={THEME}>
+              <SafeAreaProvider>
+                <StatusBar
+                  barStyle='default'
+                  backgroundColor="transparent"
+                  translucent
+                />
 
-          {closeSplash ? (
-            <CartScreen darkTopBackgroundColor={setIsBackgroundDark} />
-          ) : (
-            <SplashAnimated
-              darkTopBackgroundColor={setIsBackgroundDark}
-              unMountSplashScreen={setCloseSplash}
-            />
-          )}
-      </SafeAreaProvider>
-        </NativeBaseProvider>
-    </GestureHandlerRootView>
+                {closeSplash ? (
+
+                  <AppContextProvider>
+                    <Routes />
+                  </AppContextProvider>
+
+                ) : (
+                  <SplashAnimated
+                    darkTopBackgroundColor={setIsBackgroundDark}
+                    unMountSplashScreen={setCloseSplash}
+                  />
+                )}
+              </SafeAreaProvider>
+            </NativeBaseProvider>
+        </GestureHandlerRootView>
+      </NavigationContainer>
   );
 }

@@ -13,6 +13,7 @@ export const Loading = ({ spinnerColor, size }: LoadingProps) => {
         backgroundColor: "#272221",
         alignItems: "center",
         justifyContent: "center",
+        width: "100%",
       }}
     >
       <ActivityIndicator color={spinnerColor} size={size} />
