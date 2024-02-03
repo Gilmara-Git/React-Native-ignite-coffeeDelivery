@@ -76,6 +76,8 @@ export const ProductScreen = () => {
 
   const addItem = () => {
     const total = Number(coffee!.price) * qty;
+    const cartItemIdStorage : string[] = [];
+    const randomN = Math.random();
 
     const item = {
       id: coffeeId,
@@ -91,8 +93,9 @@ export const ProductScreen = () => {
         },
       ],
       itemTotal: total,
-      cartTotal: 0,
+      cartItemId: 'CI' + String(cartItemIdStorage.length - 1) + randomN
     };
+  
     addCoffee(item);
   };
 
@@ -148,8 +151,10 @@ export const ProductScreen = () => {
           });
         }
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+
+      console.log(error);
+      
       toast.show({
         title: "Error",
         description: "Could not find coffee details, pleas try later.",
@@ -345,7 +350,7 @@ export const ProductScreen = () => {
             <HStack justifyContent="space-between" pt={1}>
               <SizeButton
                 title="114 oz"
-                active={coffeeSize === "114"}
+                active={coffeeSize === "114 oz"}
                 color="base.gray300"
                 pressedColor="base.gray600"
                 height={10}
