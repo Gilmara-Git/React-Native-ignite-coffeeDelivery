@@ -14,11 +14,7 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import { SplashAnimated } from "@screens/SplashAnimated";
 import { Loading } from "@components/Loading";
-import { Home } from "@screens/Home";
-import { MapViewScreen } from "@screens/MapViewScreen";
-import { ProductScreen } from "@screens/ProductScreen";
-import { OrderConfirm } from "@screens/OrderConfirm";
-import { CartScreen } from "@screens/CartScreen";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Routes } from "@routes/index";
 import { AppContextProvider } from '@contexts/appContext';
@@ -27,8 +23,6 @@ export default function App() {
   const [closeSplash, setCloseSplash] = useState(false);
   const [isBackgroundDark, setIsBackgroundDark] = useState(false);
  
-
-
 
   const [fontsLoaded] = useFonts({
     Baloo2_700Bold,
