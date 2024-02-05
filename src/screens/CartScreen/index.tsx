@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef , useState } from "react";
 import { StatusBar , Alert } from "react-native";
 import {
   VStack,
@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from "native-base";
 
-import { useSharedValue } from "react-native-reanimated";
+import Animated, { useSharedValue, SlideInRight, SlideOutRight  } from "react-native-reanimated";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CartItem } from "@components/CartItem";
 import { SizeButton } from "@src/components/SizeButton";
@@ -21,9 +21,11 @@ import { useNavigation } from "@react-navigation/native";
 import { IRoutesNavigationParams } from "@routes/app.routes";
 
 import { useCart } from "@contexts/useCart";
+import { Audio } from 'expo-av';
 
 export const CartScreen = () => {
   const scrollY = useSharedValue(0);
+  // const [sound, setSound ] = useState<Audio.Sound>();
 
   const { cart, cartTotal, generateCartTotal, removeCoffee } = useCart();
   const orderNumberControl : string[] = [];
@@ -48,7 +50,28 @@ export const CartScreen = () => {
 
   const { navigate } = useNavigation<IRoutesNavigationParams>();
 
-  const directToOrder = () => {
+  const playSound = async()=>{
+    const fileToPlay = require('../../assets/success.mp3');
+  
+    try{
+      const { sound } = await Audio.Sound.createAsync(fileToPlay, { shouldPlay: true});
+
+    
+      await sound.setPositionAsync(0);
+      await sound.playAsync();
+  
+    }catch(error){
+      console.log(error)
+  
+    }
+   
+    
+  }
+
+
+  const handleToOrder = async() => {
+
+    await playSound();
    
     orderNumberControl.push('CF');
 
@@ -65,8 +88,8 @@ export const CartScreen = () => {
     <VStack bg="base.gray900" flex={1}>
       <StatusBar
         barStyle="dark-content"
-        backgroundColor="transparent"
         translucent
+     
       />
 
       {!cart.length ? (
@@ -118,6 +141,11 @@ export const CartScreen = () => {
               </HStack>
             )}
             >
+              <Animated.View
+                // layout={Layout.springify()}
+                entering={SlideInRight.duration(300)}
+                exiting={SlideOutRight.duration(300)}
+               >
                <CartItem
                   key={coffee.cartItemId}
                   id={coffee.id}
@@ -128,6 +156,8 @@ export const CartScreen = () => {
                   quantity={coffee.coffeeDetails[0].quantity}
                   cartItemId={coffee.cartItemId}
                 />
+
+              </Animated.View>
             {/* {cart.map((coffee, index) => {
               return (
                 <CartItem
@@ -184,7 +214,7 @@ export const CartScreen = () => {
 
         <HStack shadow={1}>
           <SizeButton
-            onPress={directToOrder}
+            onPress={handleToOrder}
             height={11}
             width={74}
             bg="product.yellow_dark"

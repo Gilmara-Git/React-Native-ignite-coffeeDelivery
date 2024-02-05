@@ -7,7 +7,7 @@ import {
   Text,
   Box,
   useToast,
-  View
+  View,
 } from "native-base";
 import Animated, { FlipInXUp, Keyframe } from "react-native-reanimated";
 
@@ -24,7 +24,14 @@ import { flatList_DATA as database } from "@utils/coffeeData";
 import { Loading } from "@components/Loading";
 import { useCart } from "@contexts/useCart";
 import { ImageSourcePropType } from "react-native";
-import { Skia , Canvas, Path , useValue , runTiming, runSpring  } from '@shopify/react-native-skia';
+import {
+  Skia,
+  Canvas,
+  Path,
+  useValue,
+  runTiming,
+} from "@shopify/react-native-skia";
+import { Audio } from "expo-av";
 
 type ProductParams = {
   coffeeId: number;
@@ -46,21 +53,37 @@ export const ProductScreen = () => {
   const [readyToOrder, setReadyToOrder] = useState(false);
 
   const { cart, addCoffee } = useCart();
-  const  pathEnd  = useValue(0);
+  const pathEnd = useValue(0);
   const { params } = useRoute();
   const { coffeeId } = params as ProductParams;
 
   const toast = useToast();
+
   const { goBack, navigate } = useNavigation<IRoutesNavigationParams>();
+
   const SIZE = 18;
   const SIZE_X = 26;
   const SIZE_Y = 22;
   const STROKE = 2;
-  const RADIUS = (SIZE - STROKE)/2;
+  const RADIUS = (SIZE - STROKE) / 2;
 
   const path = Skia.Path.Make();
-  path.addCircle(SIZE_X,SIZE_Y, RADIUS);
+  path.addCircle(SIZE_X, SIZE_Y, RADIUS);
 
+  const playSound = async () => {
+    const fileToPlay = require("../../assets/cash-register.mp3");
+
+    try {
+      const { sound } = await Audio.Sound.createAsync(fileToPlay, {
+        shouldPlay: true,
+      });
+
+      await sound.setPositionAsync(0);
+      await sound.playAsync();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleCoffeeSize = (size: string) => {
     setCoffeeSize(size);
@@ -74,9 +97,11 @@ export const ProductScreen = () => {
     navigate("cartScreen");
   };
 
-  const addItem = () => {
+  const addItem = async () => {
+    await playSound();
+
     const total = Number(coffee!.price) * qty;
-    const cartItemIdStorage : string[] = [];
+    const cartItemIdStorage: string[] = [];
     const randomN = Math.random();
 
     const item = {
@@ -93,10 +118,24 @@ export const ProductScreen = () => {
         },
       ],
       itemTotal: total,
-      cartItemId: 'CI' + String(cartItemIdStorage.length - 1) + randomN
+      cartItemId: "CI" + String(cartItemIdStorage.length - 1) + randomN,
     };
-  
+
     addCoffee(item);
+
+    toast.show({
+      title: `${coffee?.title}`,
+      description: `${qty} "${coffeeSize}" added to cart. Details in CART`,
+      placement: "bottom",
+      backgroundColor: "product.yellow_dark",
+      duration: 1500,
+    });
+
+    setQty(0);
+    setCoffeeSize("");
+
+
+    navigate("home");
   };
 
   const handleItemQty = (action: string) => {
@@ -119,15 +158,15 @@ export const ProductScreen = () => {
     .delay(800)
     .duration(2000);
 
-  useEffect(()=>{
-    if(cart.length > 0) {
+  useEffect(() => {
+    if (cart.length > 0) {
       // pathEnd.current = 1
-      runTiming(pathEnd, 1, { duration: 800 })
-    }else {
+      runTiming(pathEnd, 1, { duration: 800 });
+    } else {
       // pathEnd.current = 0;
-      runTiming(pathEnd, 0, { duration:800 } )
+      runTiming(pathEnd, 0, { duration: 800 });
     }
-  },[cart.length])
+  }, [cart.length]);
 
   useEffect(() => {
     if (coffeeSize !== "" && qty > 0) {
@@ -152,9 +191,8 @@ export const ProductScreen = () => {
         }
       });
     } catch (error) {
-
       console.log(error);
-      
+
       toast.show({
         title: "Error",
         description: "Could not find coffee details, pleas try later.",
@@ -203,66 +241,51 @@ export const ProductScreen = () => {
               }}
             />
 
-<View>
-
-
-            <IconButton
-              onPress={goCart}
-              icon={
-                <Icon
-                  as={MaterialCommunityIcons}
-                  name="cart"
-                  size={5}
-                  color={cart.length ? "#8047F8" : "#C47F17"}
+            <View>
+              <IconButton
+                onPress={goCart}
+                icon={
+                  <Icon
+                    as={MaterialCommunityIcons}
+                    name="cart"
+                    size={5}
+                    color={cart.length ? "#8047F8" : "#C47F17"}
+                  />
+                }
+                _pressed={{
+                  bg: "base.gray200",
+                }}
+              />
+              <Canvas
+                style={{
+                  height: SIZE * 2,
+                  width: SIZE * 2,
+                  position: "absolute",
+                  top: -16,
+                  right: 8,
+                }}
+              >
+                <Path
+                  path={path}
+                  color="#8047F8"
+                  style="stroke"
+                  strokeWidth={STROKE}
+                  start={0}
+                  end={pathEnd}
                 />
-              }
-              _pressed={{
-                bg: "base.gray200",
-              }}
-            />
-          <Canvas style={{ 
-            height: SIZE *2, 
-            width: SIZE * 2, 
-            position: 'absolute',
-            top: -16,
-            right: 8
-            
-            }} >
-            <Path 
-                path={path}
-                color='#8047F8'
-                style='stroke'
-                strokeWidth={STROKE}
-                start={0}
-                end={pathEnd}
-            
-            />
-
-
-
-          </Canvas>
-          {cart.length > 0  &&
-          
-          <Box 
-            position='absolute'
-            top={-2} 
-            right={3}
-        
-          >
-
-            <Text  
-                color='base.white'
-                fontSize='2xs'
-                fontFamily='roboto_regular'
-                >
-                  {cart.length}
-            </Text>
-                  </Box>
-          
-          }
+              </Canvas>
+              {cart.length > 0 && (
+                <Box position="absolute" top={-2} right={3}>
+                  <Text
+                    color="base.white"
+                    fontSize="2xs"
+                    fontFamily="roboto_regular"
+                  >
+                    {cart.length}
+                  </Text>
+                </Box>
+              )}
             </View>
-
-
           </HStack>
 
           <VStack px={4}>
@@ -352,27 +375,27 @@ export const ProductScreen = () => {
                 title="114 oz"
                 active={coffeeSize === "114 oz"}
                 color="base.gray300"
-                pressedColor="base.gray600"
+                pressedColor="base.gray900"
                 height={10}
-                bg="base.gray700"
+                bg={coffeeSize === "114 oz" ? "base.gray900" : "base.gray700"}
                 onPress={() => handleCoffeeSize("114 oz")}
               />
               <SizeButton
                 title="140 oz"
                 active={coffeeSize === "140 oz"}
                 color="base.gray300"
-                pressedColor="base.gray600"
+                pressedColor="base.gray900"
                 height={10}
-                bg="base.gray700"
+                bg={coffeeSize === "140 oz" ? "base.gray900" : "base.gray700"}
                 onPress={() => handleCoffeeSize("140 oz")}
               />
               <SizeButton
                 title="227 oz"
                 active={coffeeSize === "227 oz"}
                 color="base.gray300"
-                pressedColor="base.gray600"
+                pressedColor="base.gray900"
                 height={10}
-                bg="base.gray700"
+                bg={coffeeSize === "227 oz" ? "base.gray900" : "base.gray700"}
                 onPress={() => handleCoffeeSize("227 oz")}
               />
             </HStack>
@@ -427,7 +450,7 @@ export const ProductScreen = () => {
                   justifyContent="space-around"
                 >
                   <SizeButton
-                    title="ADD"
+                    title="ADD Coffee"
                     bg="product.dark_purple"
                     width={48}
                     color="base.white"
