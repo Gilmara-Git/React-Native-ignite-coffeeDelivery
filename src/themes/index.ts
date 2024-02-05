@@ -23,7 +23,8 @@ export const THEME = extendTheme({
         },
         feedback:{
             "red_dark":"#C44117",
-            "red_light": "#E8BAAB"
+            "red_light": "#E8BAAB",
+            "success": "#008000"
 
         }
     },

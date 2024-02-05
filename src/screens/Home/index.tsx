@@ -73,6 +73,7 @@ export const Home = () => {
   const scrollY = useSharedValue(0);
   const moveHorizontal = useSharedValue(0);
   const sectionListRef = useRef(null);
+
   // sectionListRef.current.scrollToLocation(scrollX, scrollY); is not working, nor the ref on the AnimatedSectionList
 
   const AnimatedDivisorLine = useAnimatedStyle(() => {
@@ -111,6 +112,7 @@ export const Home = () => {
   const handleSectionListScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.value = event.contentOffset.y;
+      // console.log(scrollY, 'linha76')
     },
   });
 
@@ -120,11 +122,13 @@ export const Home = () => {
   ) => {
     setSelectedCategory(category);
 
-    //  handleSectionListScrolling(index)
-    // sectionListRef.current.scrollToLocation({
+       
+    // sectionListRef?.current.scrollToLocation({
     //   itemIndex: 0,
     //   sectionIndex: index
     // })
+  
+   
   };
 
  
@@ -135,10 +139,10 @@ export const Home = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (scrollY.value > 400) {
-    }
-  }, [scrollY]);
+  // useEffect(() => {
+  //   if (scrollY.value > 400) {
+  //   }
+  // }, [scrollY]);
 
   return (
     <>

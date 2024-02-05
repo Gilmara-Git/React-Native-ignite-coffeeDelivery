@@ -70,7 +70,7 @@ const updateItemInCart = (id:number, action: string)=>{
     
 
     }else{
-      removeCoffee(cartItemId);
+      handleRemove(cartItemId);
     }
 
   }

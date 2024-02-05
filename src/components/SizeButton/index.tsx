@@ -11,6 +11,7 @@ type SizeButton = IButtonProps &{
 
 
 export const SizeButton = ({title, variant='solid', active, color, pressedColor,height,  ...rest }: SizeButton)=>{
+  
     return ( 
     <Button 
         variant={active ?'outline': 'solid'}

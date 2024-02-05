@@ -90,6 +90,7 @@ export const AppRoutes =()=>{
                         
                     },
                     statusBarTranslucent: true,
+                    headerLeft:(()=> <Icon as={Fontisto} name='arrow-left'size={3} onPress={goBack}/>)
                 }}
             />
         </Navigator>
