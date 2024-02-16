@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { VStack, Heading, Text , View, useToast  } from 'native-base';
 import { SafeAreaView, StatusBar } from 'react-native';
 import Illustration from '@assets/illustration.png';
-import Animated, { LightSpeedInLeft , Easing} from 'react-native-reanimated';
-import { SizeButton } from '@components/SizeButton';
+import Animated, { LightSpeedInLeft , Easing, FadeInDown } from 'react-native-reanimated';
+import { SystemButton } from '@components/SystemButton';
 
 
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -36,7 +36,7 @@ export const OrderConfirm = ()=>{
             description: `Total: $ ${orderTotal.toFixed(2)}`,
             duration: 3500,
             placement: 'top',
-            backgroundColor: '#008000'
+            backgroundColor: 'feedback.success'
         })
         clearCart();
 
@@ -58,28 +58,35 @@ export const OrderConfirm = ()=>{
                     />
 
 
-                <Heading
-                    fontFamily='baloo2_bold'
-                    fontSize='title_Lg'
-                    color='product.yellow_dark'
-                    mt={9}
-                    mb={2}
-                >Yup! Order is confirmed</Heading>
-                <View width={60}>
-                <Text
-                    fontFamily='roboto_regular'
-                    fontSize='text_Sm'
-                    color='base.gray200'
-                    numberOfLines={2}
-                    mb={12}
-                   textAlign='center'
-                    
-                >Hang in there, your coffee will get to you soon!
-                </Text>
+                <Animated.View
+                    entering={FadeInDown.duration(300).easing(Easing.ease)}
+                    >
 
-                </View>
+              
+                    <Heading
+                        fontFamily='baloo2_bold'
+                        fontSize='title_Lg'
+                        color='product.yellow_dark'
+                        mt={9}
+                        mb={2}
+                    >Yup! Order is confirmed</Heading>
+                    <View width={60}>
+                    <Text
+                        fontFamily='roboto_regular'
+                        fontSize='text_Sm'
+                        color='base.gray200'
+                        numberOfLines={2}
+                        mb={12}
+                    textAlign='center'
+                        
+                    >Hang in there, your coffee will get to you soon!
+                    </Text>
 
-                <SizeButton  
+                    </View>
+
+                </Animated.View>
+
+                <SystemButton  
                     onPress={returnHome}
                     title='Back home' 
                     color='base.white'   

@@ -1,5 +1,5 @@
 import { VStack, IconButton, Icon, Text } from "native-base";
-import { SizeButton } from "../SizeButton";
+import { SystemButton } from "../SystemButton";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import { IRoutesNavigationParams } from "@src/routes/app.routes";
@@ -29,7 +29,7 @@ export const EmptyCart = () => {
         You cart is empty.
       </Text>
 
-      <SizeButton 
+      <SystemButton 
         width={60} 
         height={11} 
         title="See Catalog" 

@@ -1,13 +1,16 @@
 import { Input as InputNativeBase, IInputProps, Icon } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
-type InputProps  = IInputProps;
+type InputProps  = IInputProps &{
+    search: (value: string)=>void;
+    value: string;
+};
 
-export const Input =( { ...rest}: InputProps)=>{
+export const Input =( {value, search, ...rest}: InputProps)=>{
     return (
         <InputNativeBase
             borderRadius={8} 
-            type='password'
+            type='text'
             size='xl'
             mt={2}
             borderColor='transparent'
@@ -22,6 +25,7 @@ export const Input =( { ...rest}: InputProps)=>{
                  size={5} 
                  color='base.gray400'
                  ml={4}
+                 onPress={()=>search(value)}
                  />}
             alignItems='center'
             _focus={

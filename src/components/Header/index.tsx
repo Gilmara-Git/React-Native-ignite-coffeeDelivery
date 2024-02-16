@@ -1,6 +1,7 @@
-import { HStack, IconButton, Icon } from "native-base";
+import { useEffect } from 'react';
+import { HStack, IconButton, Icon, Box, Text  } from "native-base";
 
-import { FontAwesome, Fontisto, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Fontisto, MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -10,13 +11,15 @@ import Animated, {
 
 import { useNavigation } from "@react-navigation/native";
 import { IRoutesNavigationParams } from '@routes/app.routes';
+import { useCart } from '@contexts/useCart';
+import { Skia , Canvas, Path , useValue , runTiming } from '@shopify/react-native-skia';
+
 
 type HeaderProps = {
   leftIcon?: string;
   title: string;
   rightIcon?: string;
   scrollY: SharedValue<number>;
-  // opacityLine?: SharedValue<number>;
   size: string
 };
 
@@ -29,6 +32,18 @@ export const Header = ({
 }: HeaderProps) => {
 
   const {navigate} = useNavigation<IRoutesNavigationParams>();
+  const { cart }  = useCart();
+  const  pathEnd  = useValue(0);
+
+  const SIZE = 18;
+  const SIZE_X = 26;
+  const SIZE_Y = 22;
+  const STROKE = 2;
+  const RADIUS = (SIZE - STROKE)/2;
+
+  const path = Skia.Path.Make();
+  path.addCircle(SIZE_X,SIZE_Y, RADIUS);
+
 
   const handleGoMapView =()=>{
     navigate('mapViewScreen')
@@ -67,6 +82,16 @@ export const Header = ({
     };
   });
 
+
+  useEffect(()=>{
+    if(cart.length > 0) {
+      // pathEnd.current = 1
+      runTiming(pathEnd, 1, { duration: 800 })
+    }else {
+      // pathEnd.current = 0;
+      runTiming(pathEnd, 0, { duration:800 } )
+    }
+  },[cart.length])
   return (
     <Animated.View style={AnimatedHeaderStyle}>
       <HStack p={4} alignItems="center" justifyContent="flex-start">
@@ -98,7 +123,7 @@ export const Header = ({
                 as={MaterialCommunityIcons}
                 name={rightIcon}
                 size="5"
-                color="#C47F17"
+                color={cart.length ? "#8047F8" : "#C47F17"}
               />
               
             }
@@ -107,6 +132,39 @@ export const Header = ({
               bg:'transparent'
             }}
           />
+         <Canvas
+                style={{
+                  height: SIZE * 2,
+                  width: SIZE * 2,
+                  position: "absolute",
+                  top: -16,
+                  right: 8,
+                }}
+              >
+                <Path
+                  path={path}
+                  color="#8047F8"
+                  style="stroke"
+                  strokeWidth={STROKE}
+                  start={0}
+                  end={pathEnd}
+                />
+              </Canvas>
+              {cart.length > 0 && (
+                <Box position="absolute" top={-3} right={3}>
+                  <Animated.Text
+                    style={[
+                      {  
+                        color:"base.white",
+                      fontSize:12,
+                      fontFamily:"Roboto_400Regular" }, AnimatedTextStyle]}
+                   
+                  >
+                    {cart.length}
+                  </Animated.Text>
+                </Box>
+              )}
+
         </HStack>
       </HStack>
 
