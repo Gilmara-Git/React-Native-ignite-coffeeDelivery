@@ -10,7 +10,7 @@ import cubano from '@src/assets/cubano.png';
 import hawaiian from '@src/assets/hawaiian.png';
 import arabic from '@src/assets/arabic.png';
 import irish from '@src/assets/irish.png';
-import { ImageSourcePropType } from "react-native";
+
 
 const sectionList_DATA = [
     {
@@ -48,7 +48,7 @@ const sectionList_DATA = [
 
 
 const newArr = sectionList_DATA.filter(item=>{
-    const search = 'traditionals'
+    const search = 'Special'
     if(item.category.toLowerCase() === (search.toLowerCase())){ return item}
    
 

@@ -81,11 +81,11 @@ export const Home = () => {
   const gap = Dimensions.get("window").width / 2;
 
   const handleSearchTextValue = (text: string) => {
-   setTextSearchValue(text);
-
-   
+      setTextSearchValue(text);
 
   };
+
+
   const AnimatedFTList = useAnimatedStyle(() => {
     return {
       transform: [
