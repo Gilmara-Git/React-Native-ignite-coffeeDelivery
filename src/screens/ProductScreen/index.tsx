@@ -13,6 +13,7 @@ import Animated, { FlipInXUp, Keyframe } from "react-native-reanimated";
 
 import Smoke from "@assets/smoke.png";
 import CoffeeMug from "@assets/coffeeMug.png";
+import { SystemButton } from "@components/SystemButton";
 import { SizeButton } from "@components/SizeButton";
 
 import { Fontisto, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -31,7 +32,9 @@ import {
   useValue,
   runTiming,
 } from "@shopify/react-native-skia";
+
 import { Audio } from "expo-av";
+import  * as Haptics  from "expo-haptics";
 
 type ProductParams = {
   coffeeId: number;
@@ -50,7 +53,10 @@ export const ProductScreen = () => {
   const [loading, setLoading] = useState(false);
   const [coffeeSize, setCoffeeSize] = useState("");
   const [qty, setQty] = useState<number>(0);
-  const [readyToOrder, setReadyToOrder] = useState(false);
+  const [cartFullFilled, setCartFullFilled] = useState(false);
+  const [ redBorder, setRedBorder ]  = useState(false);
+
+
 
   const { cart, addCoffee } = useCart();
   const pathEnd = useValue(0);
@@ -87,6 +93,7 @@ export const ProductScreen = () => {
 
   const handleCoffeeSize = (size: string) => {
     setCoffeeSize(size);
+    setRedBorder(false)
   };
 
   const handleReturnHome = () => {
@@ -97,13 +104,19 @@ export const ProductScreen = () => {
     navigate("cartScreen");
   };
 
-  const addItem = async () => {
-    await playSound();
+  const handleAddCoffee = async () => {
+  
+    await validateCoffeeSelection();
 
+    
+    if(!cartFullFilled){
+      return;
+    }
+    
     const total = Number(coffee!.price) * qty;
     const cartItemIdStorage: string[] = [];
     const randomN = Math.random();
-
+    
     const item = {
       id: coffeeId,
       label: coffee!.label,
@@ -120,9 +133,11 @@ export const ProductScreen = () => {
       itemTotal: total,
       cartItemId: "CI" + String(cartItemIdStorage.length - 1) + randomN,
     };
-
+    
     addCoffee(item);
-
+  
+    await playSound();
+    
     toast.show({
       title: `${coffee?.title}`,
       description: `${qty} "${coffeeSize}" added to cart. Details in CART`,
@@ -135,8 +150,39 @@ export const ProductScreen = () => {
     setCoffeeSize("");
 
 
+
     navigate("home");
   };
+
+
+  const validateCoffeeSelection = async()=>{
+      
+    if(coffeeSize === '' || qty === 0 ){
+
+      setCartFullFilled(false); 
+      setRedBorder(true);
+
+      setTimeout(()=>{
+        setRedBorder(false);
+      }, 800)
+
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)
+
+      return toast.show({
+        title: "You must select a coffee size and 1 quantity",
+        placement: "bottom",
+        backgroundColor: "red.400",
+        duration: 1500
+      })
+      
+    }
+    
+    if (coffeeSize !== '' || qty >= 1  ) {
+      setCartFullFilled(true); 
+      setRedBorder(false)
+    }
+
+  }
 
   const handleItemQty = (action: string) => {
     if (action === "plus") {
@@ -170,9 +216,9 @@ export const ProductScreen = () => {
 
   useEffect(() => {
     if (coffeeSize !== "" && qty > 0) {
-      setReadyToOrder(true);
+      setCartFullFilled(true);
     } else {
-      setReadyToOrder(false);
+      setCartFullFilled(false);
     }
   }, [coffeeSize, qty]);
 
@@ -315,7 +361,7 @@ export const ProductScreen = () => {
               </Text>
               <Text
                 fontFamily="baloo2_bold"
-                fontSize="title_Xl"
+                fontSize="title_Lg"
                 color="product.yellow"
               >
                 <Text fontFamily="roboto_regular" fontSize="text_Sm">
@@ -373,30 +419,24 @@ export const ProductScreen = () => {
             <HStack justifyContent="space-between" pt={1}>
               <SizeButton
                 title="114 oz"
-                active={coffeeSize === "114 oz"}
-                color="base.gray300"
-                pressedColor="base.gray900"
-                height={10}
-                bg={coffeeSize === "114 oz" ? "base.gray900" : "base.gray700"}
+                applyRedBorder={redBorder}
                 onPress={() => handleCoffeeSize("114 oz")}
+                isChecked={coffeeSize === '114 oz' ? true: false}
               />
               <SizeButton
                 title="140 oz"
-                active={coffeeSize === "140 oz"}
-                color="base.gray300"
-                pressedColor="base.gray900"
-                height={10}
-                bg={coffeeSize === "140 oz" ? "base.gray900" : "base.gray700"}
+                applyRedBorder={redBorder}
                 onPress={() => handleCoffeeSize("140 oz")}
+                isChecked={coffeeSize === '140 oz' ? true: false}
+               
               />
               <SizeButton
                 title="227 oz"
-                active={coffeeSize === "227 oz"}
-                color="base.gray300"
-                pressedColor="base.gray900"
-                height={10}
-                bg={coffeeSize === "227 oz" ? "base.gray900" : "base.gray700"}
+                applyRedBorder={redBorder}
                 onPress={() => handleCoffeeSize("227 oz")}
+                isChecked={coffeeSize === '227 oz'}
+                
+               
               />
             </HStack>
             <Box mt={5} p={2} bg="base.gray700" rounded="md">
@@ -449,15 +489,15 @@ export const ProductScreen = () => {
                   height={12}
                   justifyContent="space-around"
                 >
-                  <SizeButton
+                  <SystemButton
                     title="ADD Coffee"
                     bg="product.dark_purple"
                     width={48}
                     color="base.white"
                     pressedColor="product.brand_purple"
                     height={11}
-                    isDisabled={!readyToOrder}
-                    onPress={addItem}
+                    // isDisabled={!readyToOrder}
+                    onPress={handleAddCoffee}
                     _disabled={{
                       backgroundColor: "base.gray300",
                     }}

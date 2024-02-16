@@ -3,7 +3,7 @@ import { VStack, Heading, Text , View, useToast  } from 'native-base';
 import { SafeAreaView, StatusBar } from 'react-native';
 import Illustration from '@assets/illustration.png';
 import Animated, { LightSpeedInLeft , Easing, FadeInDown } from 'react-native-reanimated';
-import { SizeButton } from '@components/SizeButton';
+import { SystemButton } from '@components/SystemButton';
 
 
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -86,7 +86,7 @@ export const OrderConfirm = ()=>{
 
                 </Animated.View>
 
-                <SizeButton  
+                <SystemButton  
                     onPress={returnHome}
                     title='Back home' 
                     color='base.white'   

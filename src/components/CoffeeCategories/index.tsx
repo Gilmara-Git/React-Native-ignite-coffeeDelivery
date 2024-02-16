@@ -16,6 +16,7 @@ export const CoffeeCategories = ({
   ...rest
 }: CoffeeCategoriesProps) => {
 
+
     const colorActive = useSharedValue(0);
 
     const AnimatedTextStyle = useAnimatedStyle(()=>{
@@ -48,7 +49,7 @@ export const CoffeeCategories = ({
       colorActive.value =  active ? 1 : 0;
     },[active])
   return (
-    <Animated.View>
+
     <AnimatedPressable style={AnimatedPressableStyle}
         borderColor="product.dark_purple"
         rounded='14'
@@ -65,6 +66,6 @@ export const CoffeeCategories = ({
       </Animated.Text>
   
     </AnimatedPressable>
-    </Animated.View>
+
   );
 };

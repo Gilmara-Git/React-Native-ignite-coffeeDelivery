@@ -1,4 +1,4 @@
-import { useEffect, useRef , useState } from "react";
+import { useEffect, useRef } from "react";
 import { StatusBar , Alert } from "react-native";
 import {
   VStack,
@@ -9,10 +9,10 @@ import {
   ScrollView,
 } from "native-base";
 
-import Animated, { useSharedValue, SlideInRight, SlideOutRight  } from "react-native-reanimated";
+import Animated, { SlideInRight, SlideOutRight  } from "react-native-reanimated";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CartItem } from "@components/CartItem";
-import { SizeButton } from "@src/components/SizeButton";
+import { SystemButton } from "@src/components/SystemButton";
 import { EmptyCart } from "@components/EmptyCart";
 
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -24,11 +24,12 @@ import { useCart } from "@contexts/useCart";
 import { Audio } from 'expo-av';
 
 export const CartScreen = () => {
-  const scrollY = useSharedValue(0);
-  // const [sound, setSound ] = useState<Audio.Sound>();
+  // const scrollY = useSharedValue(0);
+
 
   const { cart, cartTotal, generateCartTotal, removeCoffee } = useCart();
   const orderNumberControl : string[] = [];
+
 
   const swipeableRefs =  useRef<Swipeable[]>([]);
 
@@ -158,19 +159,7 @@ export const CartScreen = () => {
                 />
 
               </Animated.View>
-            {/* {cart.map((coffee, index) => {
-              return (
-                <CartItem
-                  key={index}
-                  id={coffee.id}
-                  imgSrc={coffee.imgSrc}
-                  title={coffee.title}
-                  price={coffee.price}
-                  size={coffee.coffeeDetails[0].size}
-                  quantity={coffee.coffeeDetails[0].quantity}
-                />
-              );
-            })} */}
+        
           </Swipeable>
 
 
@@ -213,7 +202,7 @@ export const CartScreen = () => {
         </HStack>
 
         <HStack shadow={1}>
-          <SizeButton
+          <SystemButton
             onPress={handleToOrder}
             height={11}
             width={74}
