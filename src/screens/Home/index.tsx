@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { Text, HStack, View, Image, SectionList, Heading } from "native-base";
-import { Dimensions, SafeAreaView, SectionListProps , Platform } from "react-native";
+
+import { Text, HStack, View, Image,Heading } from "native-base";
+import { Dimensions, SafeAreaView, SectionListProps , SectionList , Platform } from "react-native";
 import Animated, {
   FadeInDown,
   FadeInUp,
@@ -26,22 +27,19 @@ import { CoffeeCategories } from "@components/CoffeeCategories";
 import coffeeBeans from "@assets/coffeeBeans.png";
 import { sectionList_DATA } from "@src/utils/coffeeData";
 import { flatList_DATA } from "@src/utils/coffeeData";
+import { categories  } from "@src/utils/coffeeData";
+import  { CoffeeType } from "@src/utils/coffeeData";
 import { useNavigation } from "@react-navigation/native";
 import { IRoutesNavigationParams } from '@routes/app.routes';
 
 const AnimatedSafeArea = Animated.createAnimatedComponent(SafeAreaView);
-const AnimatedSectionList =
-  Animated.createAnimatedComponent<SectionListProps<coffeeType, coffeeTypeSL>>(
-    SectionList
-  );
 
-type coffeeType = {
-  id: number;
-  label: string;
+const AnimatedSectionList =
+  Animated.createAnimatedComponent<SectionListProps<coffeeType, coffeeTypeSL>>(SectionList);
+
+  // override imgSrc type
+type coffeeType = CoffeeType & {
   imgSrc: ImageSourcePropType;
-  title: string;
-  description: string;
-  price: string;
 };
 
 type coffeeTypeSL = {
@@ -50,11 +48,8 @@ type coffeeTypeSL = {
 };
 
 
-
-const categories = ["traditionals", "sweet", "special"];
-
 export const Home = () => {
-  const [textValue, setTextValue] = useState("");
+  const [textSearchValue, setTextSearchValue] = useState("");
   const [coffeeSectionList, setCoffeeSectionList] =
     useState<coffeeTypeSL[]>(sectionList_DATA);
   const [coffeeFlatList, setCoffeeFlatList] =
@@ -68,13 +63,13 @@ export const Home = () => {
     navigate('productScreen', { coffeeId: Number(id)} )
   };
 
-
   const scrollX = useSharedValue(0);
   const scrollY = useSharedValue(0);
   const moveHorizontal = useSharedValue(0);
-  const sectionListRef = useRef(null);
 
-  // sectionListRef.current.scrollToLocation(scrollX, scrollY); is not working, nor the ref on the AnimatedSectionList
+  const sectionListRef = useRef<SectionList<coffeeType, coffeeTypeSL>>(null);
+
+
 
   const AnimatedDivisorLine = useAnimatedStyle(() => {
     return {
@@ -85,8 +80,11 @@ export const Home = () => {
   const CARD_WIDTH = 208;
   const gap = Dimensions.get("window").width / 2;
 
-  const handleTextValue = (text: string) => {
-    setTextValue(text);
+  const handleSearchTextValue = (text: string) => {
+   setTextSearchValue(text);
+
+   
+
   };
   const AnimatedFTList = useAnimatedStyle(() => {
     return {
@@ -112,7 +110,7 @@ export const Home = () => {
   const handleSectionListScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.value = event.contentOffset.y;
-      // console.log(scrollY, 'linha76')
+
     },
   });
 
@@ -122,13 +120,13 @@ export const Home = () => {
   ) => {
     setSelectedCategory(category);
 
-       
-    // sectionListRef?.current.scrollToLocation({
-    //   itemIndex: 0,
-    //   sectionIndex: index
-    // })
-  
-   
+      if(sectionListRef.current)
+      sectionListRef.current.scrollToLocation({
+        itemIndex: 0,
+        animated: true,
+        sectionIndex: index
+    });
+
   };
 
  
@@ -138,11 +136,6 @@ export const Home = () => {
       easing: Easing.ease,
     });
   }, []);
-
-  // useEffect(() => {
-  //   if (scrollY.value > 400) {
-  //   }
-  // }, [scrollY]);
 
   return (
     <>
@@ -161,9 +154,9 @@ export const Home = () => {
             size="5"
           />
 
-          <Animated.View ref={sectionListRef}>
+          <Animated.View>
             <AnimatedSectionList
-              // ref={sectionListRef}
+              ref={sectionListRef}
               initialScrollIndex={0}
               onScroll={handleSectionListScroll}
               bounces={false}
@@ -218,10 +211,12 @@ export const Home = () => {
                       </Text>
 
                       <Input
-                        value={textValue}
-                        onChangeText={handleTextValue}
+                        value={textSearchValue}
+                        onChangeText={handleSearchTextValue}
                         zIndex={1}
                         px={4}
+                        search={handleSearchTextValue}
+               
                       />
                       <View pb={48} ml={2}>
                         <Image
