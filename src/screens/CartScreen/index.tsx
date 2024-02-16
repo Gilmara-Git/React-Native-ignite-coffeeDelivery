@@ -24,8 +24,6 @@ import { useCart } from "@contexts/useCart";
 import { Audio } from 'expo-av';
 
 export const CartScreen = () => {
-  // const scrollY = useSharedValue(0);
-
 
   const { cart, cartTotal, generateCartTotal, removeCoffee } = useCart();
   const orderNumberControl : string[] = [];

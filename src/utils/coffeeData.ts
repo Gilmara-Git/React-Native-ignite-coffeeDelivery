@@ -55,7 +55,7 @@ const newArr = sectionList_DATA.filter(item=>{
      
 })
 
-console.log(newArr, 'linha64')
+
 
 // export const flatList_DATA = [
      
