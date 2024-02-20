@@ -7,8 +7,7 @@ Figma Layout:
 
 <img src="https://github.com/Gilmara-Git/React-Native-ignite-coffeeDelivery/assets/66445234/c536a58f-13af-4814-b51b-e4d7645e1fa4" alt="layout">
 
-
-  <img src="" alt='gif'>
+<img src="https://github.com/Gilmara-Git/React-Native-ignite-coffeeDelivery/assets/66445234/b16f8cb2-0f61-4a30-a297-168ab888f7eb" alt="gif"/>
 
 </div>
 <div>
